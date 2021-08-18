@@ -77,7 +77,7 @@ void Game::render()
 {
 	this->window->clear();
 
-	//Draw Game objects
+	//Draw Game objectsss
 	this->window->draw(this->enemy);
 	this->window->display();
 }
