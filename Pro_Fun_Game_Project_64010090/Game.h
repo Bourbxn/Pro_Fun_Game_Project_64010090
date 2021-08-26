@@ -1,40 +1,37 @@
 #pragma once
-#include "iostream"
-#include "SFML/Graphics.hpp"
-#include "SFML/System.hpp"
-#include "SFML/Audio.hpp"
-#include "SFML/Window.hpp"
-#include "SFML/Network.hpp"
-using namespace sf;
+
+#include "map"
+#include "Player.h"
+#include "Bullet.h"
 
 class Game
 {
 private:
-	//Variables
-	//Windows
+	//Window
 	RenderWindow* window;
-	VideoMode videoMode;
-	Event ev;
 
-	//Game objects
-	RectangleShape enemy;
+	//Resources
+	std::map<std::string, Texture*>textures;
+	std::vector<Bullet*> bullets;
 
-	//Private Functions
-	void initVariables();
+	//Player
+	Player* player;
+
+	//Private functions
 	void initWindow();
-	void initEnemy();
+	void initTextures();
+	void initPlayer();
 public:
-	//Constructors / Destructors
 	Game();
 	virtual ~Game();
 
-	//Accessors
-	const bool running() const;
-
 	//Functions
-	void pollEvents();
+
+	void run();
+
+	void updatePollEvents();
+	void updateInput();
+	void updateBullets();
 	void update();
 	void render();
 };
-
-

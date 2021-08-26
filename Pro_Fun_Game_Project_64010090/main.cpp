@@ -1,20 +1,10 @@
-#include "iostream"
 #include "Game.h"
-using namespace sf;
 
-int main() {
-	//Init Game Engine
+int main()
+{
 	Game game;
 
-	//Game loop
-	while (game.running())
-	{
-	
-		//Upddate
-		game.update();
-
-		//Render
-		game.render();
-	}
+	game.run();
+	//End of application
 	return 0;
 }

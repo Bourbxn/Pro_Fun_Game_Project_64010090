@@ -1,83 +1,117 @@
 #include "Game.h"
 
-//Private Functions
-void Game::initVariables()
-{
-	this->window = nullptr;
-}
-
 void Game::initWindow()
 {
-	this->videoMode.height = 600;
-	this->videoMode.width = 800;
-	this->window = new RenderWindow(this->videoMode, "Game Project", Style::Titlebar | Style::Close);
-	this->window->setFramerateLimit(144);
+	this->window = new RenderWindow(VideoMode(1600,1200),"Freaking Virus",Style::Close | Style::Titlebar);
+	this->window->setFramerateLimit(60);
+	this->window->setVerticalSyncEnabled(false);
 }
 
-void Game::initEnemy()
+void Game::initTextures()
 {
-	this->enemy.setPosition(10.f,10.f);
-	this->enemy.setSize(Vector2f(100.f, 100.f));
-	this->enemy.setScale(Vector2f(0.5f, 0.5f));
-	this->enemy.setFillColor(Color::Cyan);
-	this->enemy.setOutlineColor(Color::Green);
-	this->enemy.setOutlineThickness(1.f);
+	this->textures["BULLET"] = new Texture();
+	this->textures["BULLET"]->loadFromFile("Textures/bullet.png");
 }
 
-//Constructors / Destructors
+void Game::initPlayer()
+{
+	this->player = new Player();
+}
+
+//con/des
 Game::Game()
 {
-	this->initVariables();
 	this->initWindow();
-	this->initEnemy();
+	this->initTextures();
+	this->initPlayer();
 }
 
 Game::~Game()
 {
 	delete this->window;
-}
+	delete this->player;
 
-//Accessors
-const bool Game::running() const
-{
-	return this->window->isOpen();
-}
-
-void Game::pollEvents()
-{
-	//Event polling
-	while (this->window->pollEvent(this->ev))
+	//Delete textures
+	for (auto &i : this->textures)
 	{
-		switch (this->ev.type)
-		{
-		case Event::Closed:
-			this->window->close();
-			break;
-		case Event::KeyPressed:
-			if (this->ev.key.code == Keyboard::Escape)
-				this->window->close();
-			break;
-		}
+		delete i.second;
 	}
+
+	//Delete bullets
+	for (auto *i : this->bullets)
+	{
+		delete i;
+	}
+
+
 }
 
 //Functions
+void Game::run()
+{
+	while (this->window->isOpen())
+	{
+		this->update();
+		this->render();
+	}
+
+}
+
+void Game::updatePollEvents()
+{
+	Event ev;
+	while (this->window->pollEvent(ev))
+	{
+		if (ev.Event::type == Event::Closed)
+			this->window->close();
+		if (ev.Event::KeyPressed && ev.Event::key.code == Keyboard::Escape)
+			this->window->close();
+	}
+}
+
+void Game::updateInput()
+{
+	//move player
+	if (Keyboard::isKeyPressed(Keyboard::Key::Left))
+		this->player->move(-1.f, 0.f);
+	if (Keyboard::isKeyPressed(Keyboard::Key::Right))
+		this->player->move(1.f, 0.f);
+	if (Keyboard::isKeyPressed(Keyboard::Key::Up))
+		this->player->move(0.f, -1.f);
+	if (Keyboard::isKeyPressed(Keyboard::Key::Down))
+		this->player->move(0.f, 1.f);
+
+	if (sf::Keyboard::isKeyPressed(Keyboard::Key::S))
+	{
+		this->bullets.push_back(new Bullet(this->textures["BULLET"],(this->player->getPos().x)+10, this->player->getPos().y,0.f,0.f,0.f));
+	}
+}
+
+void Game::updateBullets()
+{
+	for (auto* bullet : this->bullets)
+	{
+		bullet->update();
+	}
+}
+
 void Game::update()
 {
-	this->pollEvents();
-
-	//Update Mouse Position
-	//Relative to the screen
-	//std::cout << "Mouse pos :" << Mouse::getPosition().x << " " << Mouse::getPosition().y << '\n';
-	//Relative ti the window
-	std::cout << "Mouse pos :" << Mouse::getPosition(*this->window).x << " " << Mouse::getPosition(*this->window).y << '\n';
+	this->updatePollEvents();
+	this->updateInput();
+	this->updateBullets();
 }
 
 void Game::render()
 {
-	this->window->clear();
+	this->window->clear(); 
 
-	//Draw Game objectsss
-	this->window->draw(this->enemy);
+	//Draw all the stuff
+	this->player->render(*this->window);
+	for (auto bullet : this->bullets)
+	{
+		bullet->render(this->window);
+	}
+
 	this->window->display();
 }
