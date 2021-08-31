@@ -6,7 +6,6 @@
 #include "SFML/Audio.hpp"
 #include "SFML/Window.hpp"
 #include "SFML/Network.hpp"
-#include "ctime"
 using namespace sf;
 
 
@@ -18,7 +17,11 @@ private:
 
 	float movementspeed;
 
+	float attackCooldown;
+	float attackCooldownMax;
+
 	//Private Functions
+	void initVariables();
 	void initTexture();
 	void initSprite();
 public:
@@ -29,7 +32,10 @@ public:
 	const Vector2f& getPos() const;
 
 	//Functions
-	void move(const float dirX, const float dirY);
+	void move(const float dir_X, const float dir_Y);
+	const bool canAttack();
+
+	void updateAttack();
 	void update();
 	void render(RenderTarget& target);
 };

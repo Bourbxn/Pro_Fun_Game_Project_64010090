@@ -2,7 +2,12 @@
 #define BULLET_H
 
 #include "SFML/Graphics.hpp"
-#include "iostream"
+#include "vector"
+#include "SFML/Graphics.hpp"
+#include "SFML/System.hpp"
+#include "SFML/Audio.hpp"
+#include "SFML/Window.hpp"
+#include "SFML/Network.hpp"
 using namespace sf;
 
 class Bullet
@@ -10,9 +15,11 @@ class Bullet
 private:
 
 	Sprite shape;
-	Texture* texture;
+	Texture  texture;
 	Vector2f direction;
+
 	float movementspeed;
+
 public:
 	Bullet();
 	Bullet(Texture * texture,float pos_x,float pos_y, float dir_x,float dir_y,float movement_speed);
@@ -20,6 +27,7 @@ public:
 
 	//Acecessor
 	const FloatRect getBounds() const;
+
 	void update();
 	void render(RenderTarget* target);
 };
