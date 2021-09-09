@@ -30,6 +30,7 @@ public:
 
 	//Accessor
 	const Vector2f& getPos() const;
+	const FloatRect getBounds() const;
 
 	//Functions
 	void move(const float dir_X, const float dir_Y);

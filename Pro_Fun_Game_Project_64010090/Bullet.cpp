@@ -9,8 +9,8 @@ Bullet::Bullet()
 Bullet::Bullet(Texture * texture, float pos_x, float pos_y, float dir_x, float dir_y, float movement_speed)
 {
 	this->shape.setTexture(*texture);
-	this->shape.setPosition(pos_x, pos_y);
-	this->shape.scale(0.6f, 0.6f);
+	this->shape.setPosition(pos_x, pos_y-60);
+	this->shape.scale(2.f, 2.f);
 	this->direction.x = dir_x;
 	this->direction.y = dir_y;
 	this->movementspeed = movement_speed;

@@ -87,18 +87,25 @@ void Game::updatePollEvents()
 void Game::updateInput()
 {
 	//move player
-	if (Keyboard::isKeyPressed(Keyboard::Key::Left))
+	if (Keyboard::isKeyPressed(Keyboard::Key::Left) && this->player->getPos().x>-50)
 		this->player->move(-1.f, 0.f);
-	if (Keyboard::isKeyPressed(Keyboard::Key::Right))
+	if (Keyboard::isKeyPressed(Keyboard::Key::Right) && this->player->getPos().x < 1500)
 		this->player->move(1.f, 0.f);
-	if (Keyboard::isKeyPressed(Keyboard::Key::Up))
+	if (Keyboard::isKeyPressed(Keyboard::Key::Up) && this->player->getPos().y > -50)
 		this->player->move(0.f, -1.f);
-	if (Keyboard::isKeyPressed(Keyboard::Key::Down))
+	if (Keyboard::isKeyPressed(Keyboard::Key::Down) && this->player->getPos().y < 1050)
 		this->player->move(0.f, 1.f);
 
 	if (sf::Keyboard::isKeyPressed(Keyboard::Key::Space) && this->player->canAttack())
 	{
-		this->bullets.push_back(new Bullet(this->textures["BULLET"],(this->player->getPos().x)+10, (this->player->getPos().y)-60,0.f,-1.f,20.f));
+		this->bullets.push_back(
+			new Bullet(
+			this->textures["BULLET"],
+			(this->player->getPos().x)+(this->player->getBounds().width/2.f)-70, 
+			(this->player->getPos().y),
+			0.f,
+			-1.f,
+			20.f));
 	}
 }
 
@@ -122,18 +129,41 @@ void Game::updateBullets()
 	}
 }
 
-void Game::updateEnemies()
+void Game::updateEnemiesAndCombat()
 {
 	this->spawnTimer += 0.5f;
 	if (this->spawnTimer >= this->spawnTimerMax)
 	{
-		this->enemies.push_back(new Enemy(rand() % 200, rand() % 200));
+		this->enemies.push_back(new Enemy(rand() % this->window->getSize().x-20.f, -100.f));
 		this->spawnTimer = 0.f;
 	}
 
-	for (auto* enemy : this->enemies)
+	for (int i=0;i<this->enemies.size();++i)
 	{
-		enemy->update();
+		bool enemy_removed = false;
+		this->enemies[i]->update();
+
+		for (size_t k = 0; k < this->bullets.size() && !enemy_removed; k++)
+		{
+			if (this->bullets[k]->getBounds().intersects(this->enemies[i]->getBounds()))
+			{
+				this->bullets.erase(this->bullets.begin() + k);
+				this->enemies.erase(this->enemies.begin() + i);
+				enemy_removed = true;
+			}
+		}
+
+		//Remove enemy at the bottom of screen
+		if (!enemy_removed)
+		{
+			if (this->enemies[i]->getBounds().top > this->window->getSize().y)
+			{
+				this->enemies.erase(this->enemies.begin() + i);
+				//std::cout << this->window->getPosition().x << "\n";
+				enemy_removed = true;
+			}
+		}
+
 	}
 }
 
@@ -143,7 +173,7 @@ void Game::update()
 	this->updateInput();
 	this->player->update();
 	this->updateBullets();
-	this->updateEnemies();
+	this->updateEnemiesAndCombat();
 }
 
 void Game::render()

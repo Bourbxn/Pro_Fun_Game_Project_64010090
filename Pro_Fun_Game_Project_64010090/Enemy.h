@@ -15,19 +15,26 @@ using namespace sf;
 class Enemy
 {
 private:
-	CircleShape shape;
+	Sprite enemySprite;
+	Texture enemyTexture;
+	//CircleShape shape;
 	int type;
+	float speed;
 	int hp;
 	int hpMax;
 	int damage;
 	int points;
 
-	void initShape();
+	void initTexture();
+	//void initShape();
+	void initSprite();
 	void initVariables();
 public:
 	Enemy(float pos_x, float pos_y);
 	virtual ~Enemy();
 
+	//Accessor
+	const FloatRect getBounds() const;
 	//Functions
 	void update();
 	void render(RenderTarget* target);
