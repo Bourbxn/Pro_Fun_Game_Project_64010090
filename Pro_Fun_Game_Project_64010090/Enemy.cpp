@@ -31,7 +31,7 @@ void Enemy::initSprite()
 void Enemy::initVariables()
 {
 	this->type		= 0;
-	this->speed		= 1.f;
+	this->speed		= 2.f;
 	this->hp		= 10;
 	this->hpMax		= 0;		
 	this->damage	= 1;
@@ -57,6 +57,7 @@ const FloatRect Enemy::getBounds() const
 {
 	return this->enemySprite.getGlobalBounds();
 }
+
 
 //Functions
 void Enemy::update()

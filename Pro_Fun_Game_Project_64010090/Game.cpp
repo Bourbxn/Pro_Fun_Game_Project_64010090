@@ -13,6 +13,48 @@ void Game::initTextures()
 	this->textures["BULLET"]->loadFromFile("Textures/bullet.png");
 }
 
+void Game::initGUI()
+{
+	//Load font
+	if(!this->font.loadFromFile("Fonts/ARCADECLASSIC.ttf"))
+		std::cout << "ERROR::GAME::Failed to load font" << "\n";
+
+	//Init point text
+	this->pointText.setFont(this->font);
+	this->pointText.setCharacterSize(30);
+	this->pointText.setFillColor(Color::White);
+	this->pointText.setOutlineColor(Color::Black);
+	this->pointText.setOutlineThickness(3);
+	this->pointText.setString("test");
+	this->pointText.setPosition(Vector2f(this->window->getSize().x - 140, 10.f));
+
+	//Init GUI
+	this->playerHpBar.setSize(Vector2f(300.f, 25.f));
+
+	this->playerHPBarBack = this->playerHpBar;
+	this->playerHpBar.setFillColor(Color::Red);
+	this->playerHpBar.setPosition(Vector2f(20.f, 20.f));
+
+	this->playerHPBarBack = this->playerHpBar;
+	this->playerHPBarBack.setFillColor(Color(25, 25, 25, 200));
+}
+
+void Game::initWorld()
+{
+	if (!this->worldBackgroundTex.loadFromFile("Textures/map.png"))
+	{
+		std::cout << "ERROR::GAME::COULD NOT LOAD BACKGROUND TEXTURE" << "\n";
+	}
+
+	this->worldBackground.scale(2.5f,2.5f);
+	this->worldBackground.setTexture(this->worldBackgroundTex);
+}
+
+void Game::initSystems()
+{
+	this->points = 0;
+}
+
 void Game::initPlayer()
 {
 	this->player = new Player();
@@ -31,6 +73,9 @@ Game::Game()
 {
 	this->initWindow();
 	this->initTextures();
+	this->initGUI();
+	this->initWorld();
+	this->initSystems();
 	this->initPlayer();
 	this->initEnemies();
 }
@@ -101,13 +146,29 @@ void Game::updateInput()
 		this->bullets.push_back(
 			new Bullet(
 			this->textures["BULLET"],
-			(this->player->getPos().x)+(this->player->getBounds().width/2.f)-70, 
+			(this->player->getPos().x)+(this->player->getBounds().width/2.f)-20, //Set Bullet xy from Player 
 			(this->player->getPos().y),
 			0.f,
 			-1.f,
 			20.f));
 	}
 }
+
+void Game::updateGUI()
+{
+	std::stringstream ss;
+	ss << "Score  " << this->points;
+	this->pointText.setString(ss.str());
+
+	//Update Player GUI
+	float hpPercent = static_cast<float>( this->player->getHp())/this->player->getHpMax();
+	this->playerHpBar.setSize(Vector2f(300.f* hpPercent,this->playerHpBar.getSize().y));
+}
+
+void Game::updateWorld()
+{
+}
+
 
 void Game::updateBullets()
 {
@@ -129,41 +190,64 @@ void Game::updateBullets()
 	}
 }
 
-void Game::updateEnemiesAndCombat()
+void Game::updateEnemies()
 {
+	//Spawning
 	this->spawnTimer += 0.5f;
 	if (this->spawnTimer >= this->spawnTimerMax)
 	{
 		this->enemies.push_back(new Enemy(rand() % this->window->getSize().x-20.f, -100.f));
-		this->spawnTimer = 0.f;
+		this->
+			spawnTimer = 0.f;
 	}
 
-	for (int i=0;i<this->enemies.size();++i)
+	//Update
+	unsigned counter = 0;
+	for (auto* enemy : this->enemies)
 	{
-		bool enemy_removed = false;
-		this->enemies[i]->update();
+		enemy->update();
 
-		for (size_t k = 0; k < this->bullets.size() && !enemy_removed; k++)
+
+		//Bullet culling (top of screen)
+		if (enemy->getBounds().top > this->window->getSize().y)
 		{
-			if (this->bullets[k]->getBounds().intersects(this->enemies[i]->getBounds()))
+			//Delete enemy
+			delete this->enemies.at(counter);
+			this->enemies.erase(this->enemies.begin() + counter);
+		}
+		//Enemy player Collision
+		else if (enemy->getBounds().intersects(this->player->getBounds())) 
+		{
+			//std::cout << "Get Damage";
+			this->player->loseHp(20);
+			delete this->enemies.at(counter);
+			this->enemies.erase(this->enemies.begin() + counter);
+		}
+		++counter;
+	}
+}
+
+void Game::updateCombat()
+{
+	for (int i = 0; i < this->enemies.size(); ++i)
+	{
+
+		bool enemy_deleted = false;
+		for (size_t k = 0; k<this->bullets.size() && enemy_deleted==false;k++)
+		{
+			if (this->enemies[i]->getBounds().intersects(this->bullets[k]->getBounds()))
 			{
+				this->points += 1;
+
+				delete this->enemies[i];
+				this->enemies.erase(this->enemies.begin() + i);
+
+				delete this->bullets[k];
 				this->bullets.erase(this->bullets.begin() + k);
-				this->enemies.erase(this->enemies.begin() + i);
-				enemy_removed = true;
+
+				enemy_deleted = true;
 			}
 		}
-
-		//Remove enemy at the bottom of screen
-		if (!enemy_removed)
-		{
-			if (this->enemies[i]->getBounds().top > this->window->getSize().y)
-			{
-				this->enemies.erase(this->enemies.begin() + i);
-				//std::cout << this->window->getPosition().x << "\n";
-				enemy_removed = true;
-			}
-		}
-
 	}
 }
 
@@ -173,13 +257,32 @@ void Game::update()
 	this->updateInput();
 	this->player->update();
 	this->updateBullets();
-	this->updateEnemiesAndCombat();
+	this->updateEnemies();
+	this->updateCombat();
+	this->updateGUI();
+	this->updateWorld();
+}
+
+void Game::renderGUI()
+{
+	this->window->draw(this->pointText);
+	this->window->draw(this->playerHPBarBack);
+	this->window->draw(this->playerHpBar);
+
+}
+
+void Game::renderWorld()
+{
+	this->window->draw(this->worldBackground);
 }
 
 void Game::render()
 {
 	this->window->clear(); 
 
+	//Draw world
+	this->renderWorld();
+	
 	//Draw all the stuff
 	this->player->render(*this->window);
 	for (auto *bullet : this->bullets)
@@ -192,6 +295,7 @@ void Game::render()
 		enemy->render(this->window);
 	}
 
+	this->renderGUI();
 
 	this->window->display();
 }

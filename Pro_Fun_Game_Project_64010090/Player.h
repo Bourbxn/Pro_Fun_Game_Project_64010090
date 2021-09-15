@@ -20,6 +20,9 @@ private:
 	float attackCooldown;
 	float attackCooldownMax;
 
+	int hp;
+	int hpMax;
+
 	//Private Functions
 	void initVariables();
 	void initTexture();
@@ -31,6 +34,12 @@ public:
 	//Accessor
 	const Vector2f& getPos() const;
 	const FloatRect getBounds() const;
+	const int& getHp() const;
+	const int& getHpMax() const;
+
+	//Modifiers
+	void setHp(const int hp);
+	void loseHp(const int value);
 
 	//Functions
 	void move(const float dir_X, const float dir_Y);

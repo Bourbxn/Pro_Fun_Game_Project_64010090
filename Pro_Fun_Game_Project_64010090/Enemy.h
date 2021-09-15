@@ -35,6 +35,7 @@ public:
 
 	//Accessor
 	const FloatRect getBounds() const;
+	
 	//Functions
 	void update();
 	void render(RenderTarget* target);
