@@ -22,12 +22,14 @@ private:
 
 public:
 	Bullet();
-	Bullet(Texture * texture,float pos_x,float pos_y, float dir_x,float dir_y,float movement_speed);
+	Bullet(Texture * texture,int degree,float pos_x,float pos_y, float dir_x,float dir_y,float movement_speed);
 	virtual ~Bullet();
 
 	//Acecessor
 	const FloatRect getBounds() const;
 
+	//Function
+	void updateInput();
 	void update();
 	void render(RenderTarget* target);
 };

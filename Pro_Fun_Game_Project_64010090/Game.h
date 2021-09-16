@@ -40,6 +40,13 @@ private:
 	float spawnTimerMax;
 	std::vector<Enemy*> enemies;
 
+	//Bullet
+	float bulletDirX;
+	float bulletDirY;
+	float bulletPosX;
+	float bulletPosY;
+	float bulletRotDeg;
+
 	//Private functions
 	void initWindow();
 	void initTextures();

@@ -23,6 +23,8 @@ private:
 	int hp;
 	int hpMax;
 
+	int animation = 0;
+
 	//Private Functions
 	void initVariables();
 	void initTexture();
@@ -45,6 +47,7 @@ public:
 	void move(const float dir_X, const float dir_Y);
 	const bool canAttack();
 
+	void updateSprite();
 	void updateAttack();
 	void update();
 	void render(RenderTarget& target);

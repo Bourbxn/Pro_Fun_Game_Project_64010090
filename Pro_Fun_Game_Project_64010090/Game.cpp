@@ -131,25 +131,54 @@ void Game::updatePollEvents()
 
 void Game::updateInput()
 {
-	//move player
-	if (Keyboard::isKeyPressed(Keyboard::Key::Left) && this->player->getPos().x>-50)
+	//move player and update input init variables
+	if (Keyboard::isKeyPressed(Keyboard::Key::Left) && this->player->getPos().x > -50)
+	{
 		this->player->move(-1.f, 0.f);
+		this->bulletDirX = -1;
+		this->bulletDirY = 0;
+		this->bulletPosX = (this->player->getPos().x) + (this->player->getBounds().width / 2.f) - 50;
+		this->bulletPosY = (this->player->getPos().y) + 175;
+		this->bulletRotDeg = -90;
+	}
 	if (Keyboard::isKeyPressed(Keyboard::Key::Right) && this->player->getPos().x < 1500)
+	{
 		this->player->move(1.f, 0.f);
-	if (Keyboard::isKeyPressed(Keyboard::Key::Up) && this->player->getPos().y > -50)
+		this->bulletDirX = 1;
+		this->bulletDirY = 0;
+		this->bulletPosX = (this->player->getPos().x) + (this->player->getBounds().width / 2.f) + 50;
+		this->bulletPosY = (this->player->getPos().y) + 155;
+		this->bulletRotDeg = 90;
+	}
+	if (Keyboard::isKeyPressed(Keyboard::Key::Up) && this->player->getPos().y > -50) {
 		this->player->move(0.f, -1.f);
+		this->bulletDirX = 0;
+		this->bulletDirY = -1;
+		this->bulletPosX = (this->player->getPos().x) + (this->player->getBounds().width / 2.f) - 10;
+		this->bulletPosY = (this->player->getPos().y) + 50;
+		this->bulletRotDeg = 0;
+	}
 	if (Keyboard::isKeyPressed(Keyboard::Key::Down) && this->player->getPos().y < 1050)
+	{
 		this->player->move(0.f, 1.f);
+		this->bulletDirX = 0;
+		this->bulletDirY = 1;
+		this->bulletPosX = (this->player->getPos().x) + (this->player->getBounds().width / 2.f) +10;
+		this->bulletPosY = (this->player->getPos().y) + 200;
+		this->bulletRotDeg = 180;
+	}
+
 
 	if (sf::Keyboard::isKeyPressed(Keyboard::Key::Space) && this->player->canAttack())
 	{
 		this->bullets.push_back(
 			new Bullet(
 			this->textures["BULLET"],
-			(this->player->getPos().x)+(this->player->getBounds().width/2.f)-20, //Set Bullet xy from Player 
-			(this->player->getPos().y),
-			0.f,
-			-1.f,
+			this->bulletRotDeg, //Set Rotation
+			this->bulletPosX, //Set Bullet xy from Player 
+			this->bulletPosY,
+			this->bulletDirX,
+			this->bulletDirY,
 			20.f));
 	}
 }

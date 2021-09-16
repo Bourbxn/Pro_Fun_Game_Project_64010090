@@ -2,7 +2,7 @@
 
 void Player::initVariables()
 {
-	this->movementspeed = 6.f;
+	this->movementspeed = 5.f;
 	this->attackCooldownMax = 15.f;
 	this->attackCooldown = this->attackCooldownMax;
 
@@ -13,7 +13,7 @@ void Player::initVariables()
 void Player::initTexture()
 {
 	//Load a texture from file
-	if (!this->texture.loadFromFile("Textures/ship.png"))
+	if (!this->texture.loadFromFile("Textures/Bourbxn_Movement2.png"))
 	{
 		std::cout << "ERROR::PLAYER::INITTEXTURE::Could not load textures file." << "\n";
 	}
@@ -23,9 +23,14 @@ void Player::initSprite()
 {
 	//Set the texture to the sprite
 	this->sprite.setTexture(this->texture);
+	this->sprite.setTextureRect(IntRect(0, 0, 64, 64));
+	
 
 	//Resize the sprite
 	this->sprite.scale(2.5f, 2.5f);
+
+	//Set Position the sprite
+	this->sprite.setPosition(800.f-(this->texture.getSize().x/3.f),600.f- (this->texture.getSize().y / 4.f));
 	
 }
 
@@ -90,6 +95,35 @@ const bool Player::canAttack()
 	return false;
 }
 
+void Player::updateSprite()
+{
+	if (Keyboard::isKeyPressed(Keyboard::Key::Left))
+	{
+		this->sprite.setTextureRect(IntRect(0 + (animation*64), 128, 64, 64));
+		//animation++;
+		//if (animation == 3) animation = 0;
+	}	
+	if (Keyboard::isKeyPressed(Keyboard::Key::Right))
+	{
+		this->sprite.setTextureRect(IntRect(0 + (animation * 64), 64, 64, 64));
+		//animation++;
+		//if (animation == 3) animation = 0;
+	}
+	if (Keyboard::isKeyPressed(Keyboard::Key::Up))
+	{
+		this->sprite.setTextureRect(IntRect(0 + (animation * 64), 192, 64, 64));
+		//animation++;
+		//if (animation == 3) animation = 0;
+	}
+	if (Keyboard::isKeyPressed(Keyboard::Key::Down))
+	{
+		this->sprite.setTextureRect(IntRect(0 + (animation * 64), 0, 64, 64));
+		//animation++;
+		//if (animation == 3) animation = 0;
+	}
+
+}
+
 void Player::updateAttack()
 {
 	if(this->attackCooldown < this->attackCooldownMax)
@@ -99,6 +133,7 @@ void Player::updateAttack()
 //Functions
 void Player::update()
 {
+	this->updateSprite();
 	this->updateAttack();
 }
 
