@@ -17,18 +17,20 @@ class Enemy
 private:
 	Sprite enemySprite;
 	Texture enemyTexture;
-	//CircleShape shape;
+
 	int type;
-	float speed;
+	float speed_y;
+	float speed_x;
 	int hp;
 	int hpMax;
 	int damage;
 	int points;
 
 	void initTexture();
-	//void initShape();
 	void initSprite();
 	void initVariables();
+	void initDirectionVar(float dirX,float dirY);
+
 public:
 	Enemy(float pos_x, float pos_y);
 	virtual ~Enemy();

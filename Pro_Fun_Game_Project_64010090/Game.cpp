@@ -196,6 +196,7 @@ void Game::updateGUI()
 
 void Game::updateWorld()
 {
+
 }
 
 
@@ -222,17 +223,19 @@ void Game::updateBullets()
 void Game::updateEnemies()
 {
 	//Spawning
-	this->spawnTimer += 0.5f;
+	this->spawnTimer += 0.2f;
 	if (this->spawnTimer >= this->spawnTimerMax)
 	{
-		this->enemies.push_back(new Enemy(rand() % this->window->getSize().x-20.f, -100.f));
-		this->
-			spawnTimer = 0.f;
+		this->enemies.push_back(new Enemy(rand() % this->window->getSize().x-20.f, -100.f));							//Down
+		this->enemies.push_back(new Enemy(rand() % this->window->getSize().x - 20.f,this->window->getSize().y));		//Up
+		this->enemies.push_back(new Enemy(0.f, rand() % this->window->getSize().y-20));									//Right
+		this->enemies.push_back(new Enemy(this->window->getSize().x, rand() % this->window->getSize().y-20));			//Left
+		this->spawnTimer = 0.f;
 	}
 
 	//Update
 	unsigned counter = 0;
-	for (auto* enemy : this->enemies)
+	for (auto* enemy : this->enemies) 
 	{
 		enemy->update();
 
