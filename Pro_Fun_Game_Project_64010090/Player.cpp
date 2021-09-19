@@ -2,6 +2,9 @@
 
 void Player::initVariables()
 {
+	this->animation = 0;
+	this->animationDelay = 6;
+
 	this->movementspeed = 5.f;
 	this->attackCooldownMax = 10.f;
 	this->attackCooldown = this->attackCooldownMax;
@@ -13,7 +16,7 @@ void Player::initVariables()
 void Player::initTexture()
 {
 	//Load a texture from file
-	if (!this->texture.loadFromFile("Textures/Bourbxn_Movement2.png"))
+	if (!this->texture.loadFromFile("Textures/Bourbxn_Movement3.png"))
 	{
 		std::cout << "ERROR::PLAYER::INITTEXTURE::Could not load textures file." << "\n";
 	}
@@ -23,7 +26,7 @@ void Player::initSprite()
 {
 	//Set the texture to the sprite
 	this->sprite.setTexture(this->texture);
-	this->sprite.setTextureRect(IntRect(0, 0, 64, 64));
+	this->sprite.setTextureRect(IntRect(0, 0, this->texture.getSize().x/3, this->texture.getSize().y / 4));
 	
 
 	//Resize the sprite
@@ -99,29 +102,44 @@ void Player::updateSprite()
 {
 	if (Keyboard::isKeyPressed(Keyboard::Key::Left))
 	{
-		this->sprite.setTextureRect(IntRect(0 + (animation*64), 128, 64, 64));
-		//animation++;
-		//if (animation == 3) animation = 0;
+		this->sprite.setTextureRect(IntRect(
+			(this->animation/this->animationDelay) *(this->texture.getSize().x/3),
+			(this->texture.getSize().y / 4) * 2,
+			this->texture.getSize().x/3, 
+			this->texture.getSize().y / 4));
+		this->animation++;
+		if (animation == (this->animationDelay * 3) - 1) this->animation = 0;
 	}	
 	if (Keyboard::isKeyPressed(Keyboard::Key::Right))
 	{
-		this->sprite.setTextureRect(IntRect(0 + (animation * 64), 64, 64, 64));
-		//animation++;
-		//if (animation == 3) animation = 0;
+		this->sprite.setTextureRect(IntRect(
+			(this->animation / this->animationDelay) * (this->texture.getSize().x / 3),
+			(this->texture.getSize().y / 4) * 1,
+			this->texture.getSize().x / 3,
+			this->texture.getSize().y / 4));
+		this->animation++;
+		if (animation == (this->animationDelay * 3)-1) this->animation = 0;
 	}
 	if (Keyboard::isKeyPressed(Keyboard::Key::Up))
 	{
-		this->sprite.setTextureRect(IntRect(0 + (animation * 64), 192, 64, 64));
-		//animation++;
-		//if (animation == 3) animation = 0;
+		this->sprite.setTextureRect(IntRect(
+			(this->animation / this->animationDelay) * (this->texture.getSize().x / 3),
+			(this->texture.getSize().y / 4) * 3,
+			this->texture.getSize().x / 3,
+			this->texture.getSize().y / 4));
+		this->animation++;
+		if (animation == (this->animationDelay * 3) - 1) this->animation = 0;
 	}
 	if (Keyboard::isKeyPressed(Keyboard::Key::Down))
 	{
-		this->sprite.setTextureRect(IntRect(0 + (animation * 64), 0, 64, 64));
-		//animation++;
-		//if (animation == 3) animation = 0;
+		this->sprite.setTextureRect(IntRect(
+			(this->animation / this->animationDelay) * (this->texture.getSize().x / 3),
+			(this->texture.getSize().y / 4) * 0,
+			this->texture.getSize().x / 3,
+			this->texture.getSize().y / 4));
+		this->animation++;
+		if (animation == (this->animationDelay * 3) - 1) this->animation = 0;
 	}
-
 }
 
 void Player::updateAttack()

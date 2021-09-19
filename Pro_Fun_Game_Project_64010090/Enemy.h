@@ -25,6 +25,7 @@ private:
 	int hpMax;
 	int damage;
 	int points;
+	int animation;
 
 	void initTexture();
 	void initSprite();

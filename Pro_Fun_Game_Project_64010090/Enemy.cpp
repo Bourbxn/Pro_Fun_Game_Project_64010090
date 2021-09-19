@@ -4,7 +4,7 @@
 void Enemy::initTexture()
 {
 	//Load a texture from file
-	if (!this->enemyTexture.loadFromFile("Textures/enemy.png"))
+	if (!this->enemyTexture.loadFromFile("Textures/Zombie_Movement.png"))
 	{
 		std::cout << "ERROR::ENEMY::INITTEXTURE::Could not load textures file." << "\n";
 	}
@@ -14,6 +14,7 @@ void Enemy::initSprite()
 {
 	//Set the texture to the sprite
 	this->enemySprite.setTexture(this->enemyTexture);
+	this->enemySprite.setTextureRect(IntRect(0, 0, this->enemyTexture.getSize().x / 3, this->enemyTexture.getSize().y / 4));
 
 	//Resize the sprite
 	this->enemySprite.scale(2.5f, 2.5f);
@@ -26,29 +27,50 @@ void Enemy::initVariables()
 	this->hpMax		= 0;		
 	this->damage	= 1;
 	this->points	= 5;
+	this->animation = 0;
 }
 
 void Enemy::initDirectionVar(float dirX, float dirY)
 {
-	if (dirY == 1200 && dirX >= 0 && dirX <= 1600)		//Enemies move up
+	if (dirY == 1080 && dirX >= 0 && dirX <= 1920)		//Enemies move up
 	{
 		this->speed_y = -1.f;
 		this->speed_x = 0.f;
+		this->enemySprite.setTextureRect(IntRect(
+			(this->enemyTexture.getSize().x/3)*(this->animation),		//Position of model x
+			(this->enemyTexture.getSize().y / 4) * 3,					//Postion of model y
+			this->enemyTexture.getSize().x / 3,							//Set size x
+			this->enemyTexture.getSize().y / 4));						//Set size y
 	}
-	if (dirY == -100 && dirX >= 0 && dirX <= 1600)		//Enemies move down
+	if (dirY == -100 && dirX >= 0 && dirX <= 1920)		//Enemies move down
 	{
 		this->speed_y = 1.f;
-		this->speed_x = 0.f;;
+		this->speed_x = 0.f;
+		this->enemySprite.setTextureRect(IntRect(
+			(this->enemyTexture.getSize().x / 3) * (this->animation),		//Position of model x
+			(this->enemyTexture.getSize().y / 4) * 0,						//Postion of model y
+			this->enemyTexture.getSize().x / 3,								//Set size x
+			this->enemyTexture.getSize().y / 4));							//Set size y
 	}
-	if (dirX == 0 && dirY >= 0 && dirY <= 1200)			//Enemies move right
+	if (dirX == 0 && dirY >= 0 && dirY <= 1080)			//Enemies move right
 	{
 		this->speed_y = 0.f;
 		this->speed_x = 1.f;
+		this->enemySprite.setTextureRect(IntRect(
+			(this->enemyTexture.getSize().x / 3) * (this->animation),		//Position of model x
+			(this->enemyTexture.getSize().y / 4) * 1,						//Postion of model y
+			this->enemyTexture.getSize().x / 3,								//Set size x
+			this->enemyTexture.getSize().y / 4));							//Set size y
 	}
-	if (dirX == 1600 && dirY >= 0 && dirY <= 1200)		//Enemies move left
+	if (dirX == 1920 && dirY >= 0 && dirY <= 1080)		//Enemies move left
 	{
 		this->speed_y = 0.f;
 		this->speed_x = -1.f;
+		this->enemySprite.setTextureRect(IntRect(
+			(this->enemyTexture.getSize().x / 3) * (this->animation),		//Position of model x
+			(this->enemyTexture.getSize().y / 4) * 2,						//Postion of model y
+			this->enemyTexture.getSize().x / 3,								//Set size x
+			this->enemyTexture.getSize().y / 4));							//Set size y
 	}
 }
 

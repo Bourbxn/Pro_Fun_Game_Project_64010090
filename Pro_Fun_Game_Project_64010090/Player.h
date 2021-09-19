@@ -15,6 +15,9 @@ private:
 	Sprite sprite;
 	Texture texture;
 
+	int animation;
+	int animationDelay;
+
 	float movementspeed;
 
 	float attackCooldown;
@@ -22,8 +25,6 @@ private:
 
 	int hp;
 	int hpMax;
-
-	int animation = 0;
 
 	//Private Functions
 	void initVariables();
