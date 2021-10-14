@@ -1,17 +1,21 @@
 #pragma once
-
-#include "map"
-#include "string"
-#include "sstream"
-#include "Player.h"
 #include "Bullet.h"
 #include "Enemy.h"
+#include "Player.h"
+#include "sstream"
+
 
 class Game
 {
 private:
 	//Window
 	RenderWindow* window;
+
+
+	//Variables
+	float dt;
+	Clock dtClock;
+	
 
 	//Resource
 	std::map<std::string, Texture*>textures;
@@ -61,8 +65,11 @@ public:
 
 	//Functions
 
-	void run();
+	//Regular
+	void endApplication();
 
+	//Update
+	void updateDT();
 	void updatePollEvents();
 	void updateInput();
 	void updateGUI();
@@ -71,7 +78,12 @@ public:
 	void updateEnemies();
 	void updateCombat();
 	void update();
+
+	//Render
 	void renderGUI();
 	void renderWorld();
 	void render();
+
+	//Core
+	void run();
 };

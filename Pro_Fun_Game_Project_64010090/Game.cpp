@@ -2,7 +2,7 @@
 
 void Game::initWindow()
 {
-	this->window = new RenderWindow(VideoMode(1600,1200),"Freaking Virus",Style::Close | Style::Titlebar);
+	this->window = new RenderWindow(VideoMode(1920,1080),"Freaking Virus",Style::Close | Style::Fullscreen);
 	this->window->setFramerateLimit(60);
 	this->window->setVerticalSyncEnabled(false);
 }
@@ -46,7 +46,7 @@ void Game::initWorld()
 		std::cout << "ERROR::GAME::COULD NOT LOAD BACKGROUND TEXTURE" << "\n";
 	}
 
-	this->worldBackground.scale(2.5f,2.5f);
+	this->worldBackground.scale(3.f,3.f);
 	this->worldBackground.setTexture(this->worldBackgroundTex);
 }
 
@@ -84,7 +84,7 @@ Game::~Game()
 {
 	delete this->window;
 	delete this->player;
-
+	
 	//Delete textures
 	for (auto &i : this->textures)
 	{
@@ -117,6 +117,12 @@ void Game::run()
 
 }
 
+void Game::endApplication()
+{
+	std::cout << "Ending Application!" << "\n";
+}
+
+
 void Game::updatePollEvents()
 {
 	Event ev;
@@ -132,33 +138,33 @@ void Game::updatePollEvents()
 void Game::updateInput()
 {
 	//move player and update input init variables
-	if (Keyboard::isKeyPressed(Keyboard::Key::Left) && this->player->getPos().x > -50)
+	if (Keyboard::isKeyPressed(Keyboard::Key::Left) && this->player->getPos().x > 0)
 	{
 		this->player->move(-1.f, 0.f);
 		this->bulletDirX = -1;
 		this->bulletDirY = 0;
-		this->bulletPosX = (this->player->getPos().x) + (this->player->getBounds().width / 2.f) - 50;
-		this->bulletPosY = (this->player->getPos().y) + 175;
+		this->bulletPosX = (this->player->getPos().x) + (this->player->getBounds().width / 2.f) - 60;
+		this->bulletPosY = (this->player->getPos().y) + 165;
 		this->bulletRotDeg = -90;
 	}
-	if (Keyboard::isKeyPressed(Keyboard::Key::Right) && this->player->getPos().x < 1500)
+	if (Keyboard::isKeyPressed(Keyboard::Key::Right) && this->player->getPos().x < this->window->getSize().x)
 	{
 		this->player->move(1.f, 0.f);
 		this->bulletDirX = 1;
 		this->bulletDirY = 0;
-		this->bulletPosX = (this->player->getPos().x) + (this->player->getBounds().width / 2.f) + 50;
-		this->bulletPosY = (this->player->getPos().y) + 155;
+		this->bulletPosX = (this->player->getPos().x) + (this->player->getBounds().width / 2.f) + 65;
+		this->bulletPosY = (this->player->getPos().y) + 145;
 		this->bulletRotDeg = 90;
 	}
-	if (Keyboard::isKeyPressed(Keyboard::Key::Up) && this->player->getPos().y > -50) {
+	if (Keyboard::isKeyPressed(Keyboard::Key::Up) && this->player->getPos().y > 0) {
 		this->player->move(0.f, -1.f);
 		this->bulletDirX = 0;
 		this->bulletDirY = -1;
 		this->bulletPosX = (this->player->getPos().x) + (this->player->getBounds().width / 2.f) - 10;
-		this->bulletPosY = (this->player->getPos().y) + 50;
+		this->bulletPosY = (this->player->getPos().y) + 40;
 		this->bulletRotDeg = 0;
 	}
-	if (Keyboard::isKeyPressed(Keyboard::Key::Down) && this->player->getPos().y < 1050)
+	if (Keyboard::isKeyPressed(Keyboard::Key::Down) && this->player->getPos().y < this->window->getSize().y)
 	{
 		this->player->move(0.f, 1.f);
 		this->bulletDirX = 0;
@@ -312,6 +318,7 @@ void Game::render()
 {
 	this->window->clear(); 
 
+	
 	//Draw world
 	this->renderWorld();
 	
