@@ -11,15 +11,17 @@ private:
 	//Window
 	RenderWindow* window;
 
-
-	//Variables
-	float dt;
-	Clock dtClock;
-	
-
 	//Resource
 	std::map<std::string, Texture*>textures;
 	std::vector<Bullet*> bullets;
+
+	//SFX
+	SoundBuffer pistolShot;
+	Sound pistolShotSFX;
+	SoundBuffer zombieDeath;
+	Sound zombieDeathSFX;
+	SoundBuffer bourbxnHurt;
+	Sound bourbxnHurtSFX;
 
 	//GUI
 	Font font;
@@ -54,6 +56,7 @@ private:
 	//Private functions
 	void initWindow();
 	void initTextures();
+	void initAudio();
 	void initGUI();
 	void initWorld();
 	void initSystems();
@@ -65,11 +68,7 @@ public:
 
 	//Functions
 
-	//Regular
-	void endApplication();
-
 	//Update
-	void updateDT();
 	void updatePollEvents();
 	void updateInput();
 	void updateGUI();

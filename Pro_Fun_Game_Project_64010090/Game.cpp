@@ -13,6 +13,23 @@ void Game::initTextures()
 	this->textures["BULLET"]->loadFromFile("Textures/bullet.png");
 }
 
+void Game::initAudio()
+{
+	//Load Pistol shot sound
+	if (!pistolShot.loadFromFile("Audio/pistol_shot_sfx.wav"))
+		std::cout << "ERROR::GAME::Failed to load pistol shot audio" << "\n";
+	pistolShotSFX.setBuffer(pistolShot);
+	pistolShotSFX.setVolume(100);
+	if (!zombieDeath.loadFromFile("Audio/zombie_death_sfx.wav"))
+		std::cout << "ERROR::GAME::Failed to load zombie death audio" << "\n";
+	zombieDeathSFX.setBuffer(zombieDeath);
+	zombieDeathSFX.setVolume(100);
+	if (!bourbxnHurt.loadFromFile("Audio/bourbxn_hurt_sfx.wav"))
+		std::cout << "ERROR::GAME::Failed to load Bourbxn hurt audio" << "\n";
+	bourbxnHurtSFX.setBuffer(bourbxnHurt);
+	bourbxnHurtSFX.setVolume(100);
+}
+
 void Game::initGUI()
 {
 	//Load font
@@ -73,6 +90,7 @@ Game::Game()
 {
 	this->initWindow();
 	this->initTextures();
+	this->initAudio();
 	this->initGUI();
 	this->initWorld();
 	this->initSystems();
@@ -117,12 +135,6 @@ void Game::run()
 
 }
 
-void Game::endApplication()
-{
-	std::cout << "Ending Application!" << "\n";
-}
-
-
 void Game::updatePollEvents()
 {
 	Event ev;
@@ -147,7 +159,7 @@ void Game::updateInput()
 		this->bulletPosY = (this->player->getPos().y) + 165;
 		this->bulletRotDeg = -90;
 	}
-	if (Keyboard::isKeyPressed(Keyboard::Key::Right) && this->player->getPos().x < this->window->getSize().x)
+	if (Keyboard::isKeyPressed(Keyboard::Key::Right) && this->player->getPos().x < this->window->getSize().x - 100)
 	{
 		this->player->move(1.f, 0.f);
 		this->bulletDirX = 1;
@@ -164,7 +176,7 @@ void Game::updateInput()
 		this->bulletPosY = (this->player->getPos().y) + 40;
 		this->bulletRotDeg = 0;
 	}
-	if (Keyboard::isKeyPressed(Keyboard::Key::Down) && this->player->getPos().y < this->window->getSize().y)
+	if (Keyboard::isKeyPressed(Keyboard::Key::Down) && this->player->getPos().y < window->getSize().y-140)
 	{
 		this->player->move(0.f, 1.f);
 		this->bulletDirX = 0;
@@ -177,6 +189,7 @@ void Game::updateInput()
 
 	if (sf::Keyboard::isKeyPressed(Keyboard::Key::Space) && this->player->canAttack())
 	{
+		pistolShotSFX.play();
 		this->bullets.push_back(
 			new Bullet(
 			this->textures["BULLET"],
@@ -256,6 +269,7 @@ void Game::updateEnemies()
 		//Enemy player Collision
 		else if (enemy->getBounds().intersects(this->player->getBounds())) 
 		{
+			bourbxnHurtSFX.play();
 			//std::cout << "Get Damage";
 			this->player->loseHp(20);
 			delete this->enemies.at(counter);
@@ -275,6 +289,8 @@ void Game::updateCombat()
 		{
 			if (this->enemies[i]->getBounds().intersects(this->bullets[k]->getBounds()))
 			{
+				zombieDeathSFX.play();
+
 				this->points += 1;
 
 				delete this->enemies[i];
