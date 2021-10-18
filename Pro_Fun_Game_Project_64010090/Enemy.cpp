@@ -28,6 +28,10 @@ void Enemy::initVariables()
 	this->damage	= 1;
 	this->points	= 5;
 	this->animation = 0;
+	this->dir_x = 0;
+	this->dir_y = 0;
+	this->last_dir_x = -1;
+	this->last_dir_y = -1;
 }
 
 void Enemy::initDirectionVar(float dirX, float dirY)
@@ -97,10 +101,58 @@ const FloatRect Enemy::getBounds() const
 	return this->enemySprite.getGlobalBounds();
 }
 
+void Enemy::updateEnemyMoveUpDown()
+{
+	this->time = clock.getElapsedTime().asSeconds();
+	if (this->time > 1)
+	{
+		if (this->dir_x == 0)
+		{
+			this->dir_x = rand() % 2 - 1;
+			if (this->dir_x == 0) this->dir_x = 1;
+		}
+		else if (this->dir_x == -1)
+		{
+			this->dir_x = rand() % 2;
+		}
+		else if (this->dir_x == 1)
+		{
+			this->dir_x = rand() % 2 - 1;
+		}
+		clock.restart();
+	}
+
+	this->enemySprite.move(this->speed_x + this->dir_x, this->speed_y);
+}
+
+void Enemy::updateEnemyMoveLeftRight()
+{
+	this->time = clock.getElapsedTime().asSeconds();
+	if (this->time > 1)
+	{
+		if (this->dir_y == 0)
+		{
+			this->dir_y = rand() % 2 - 1;
+			if (this->dir_y == 0) this->dir_y = 1;
+		}
+		else if (this->dir_y == -1)
+		{
+			this->dir_y = rand() % 2;
+		}
+		else if (this->dir_y == 1)
+		{
+			this->dir_y = rand() % 2 - 1;
+		}
+		clock.restart();
+	}
+
+	this->enemySprite.move(this->speed_x, this->speed_y + this->dir_y);
+}
+
 //Functions
 void Enemy::update()
 {
-	this->enemySprite.move(this->speed_x, this->speed_y);
+
 }
 
 void Enemy::render(RenderTarget* target)

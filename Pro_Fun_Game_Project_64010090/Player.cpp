@@ -16,7 +16,7 @@ void Player::initVariables()
 void Player::initTexture()
 {
 	//Load a texture from file
-	if (!this->texture.loadFromFile("Textures/Bourbxn_Movement3.png"))
+	if (!this->texture.loadFromFile("Textures/Bourbxn_Movement4.png"))
 	{
 		std::cout << "ERROR::PLAYER::INITTEXTURE::Could not load textures file." << "\n";
 	}
@@ -140,6 +140,11 @@ void Player::updateSprite()
 		this->animation++;
 		if (animation == (this->animationDelay * 3) - 1) this->animation = 0;
 	}
+}
+
+void Player::updateAttackStatus(float attackCoolDownMaxUpdate)
+{
+	this->attackCooldownMax = attackCoolDownMaxUpdate;
 }
 
 void Player::updateAttack()

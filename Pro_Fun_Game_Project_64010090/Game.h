@@ -2,7 +2,9 @@
 #include "Bullet.h"
 #include "Enemy.h"
 #include "Player.h"
+#include "Gun.h"
 #include "sstream"
+
 
 
 class Game
@@ -22,6 +24,10 @@ private:
 	Sound zombieDeathSFX;
 	SoundBuffer bourbxnHurt;
 	Sound bourbxnHurtSFX;
+	SoundBuffer gunDropBuff;
+	Sound gunDropSFX;
+	SoundBuffer gunCorrectBuff;
+	Sound gunCorrectSFX;
 
 	//GUI
 	Font font;
@@ -37,14 +43,30 @@ private:
 	//Player
 	Player* player;
 
+
 	//Player GUI
 	RectangleShape playerHpBar;
 	RectangleShape playerHPBarBack;
 
+	//Gun
+	Gun* gun;
+	Texture textureGunDrop;
+	Sprite spriteGunDrop;
+
+	//Time
+	Clock clock;
+	float time;
+	int deltaTime;
+
+
 	//Enemies
-	float spawnTimer;
-	float spawnTimerMax;
-	std::vector<Enemy*> enemies;
+	float spawnTimerUpDown;
+	float spawnTimerMaxUpDown;
+	float spawnTimerLeftRight;
+	float spawnTimerMaxLeftRight;
+	float spawnTimerRate;
+	std::vector<Enemy*> enemiesUpDown;
+	std::vector<Enemy*> enemiesLeftRight;
 
 	//Bullet
 	float bulletDirX;
@@ -52,6 +74,19 @@ private:
 	float bulletPosX;
 	float bulletPosY;
 	float bulletRotDeg;
+
+	//Gun
+	bool gunDropState;
+	bool gunRandomState;
+	bool gunCorrect;
+	int gunDropItem;
+	unsigned int gunDropPercent;
+	int gunDropPos_x;
+	int gunDropPos_y;
+	int gunType;
+	float playerAttackCoolDownMax;
+	bool gunDropPlay;
+	bool gunCorrectPlay;
 
 	//Private functions
 	void initWindow();
@@ -61,6 +96,7 @@ private:
 	void initWorld();
 	void initSystems();
 	void initPlayer();
+	void initGun();
 	void initEnemies();
 public:
 	Game();
@@ -73,12 +109,19 @@ public:
 	void updateInput();
 	void updateGUI();
 	void updateWorld();
+	void updateTextures();
 	void updateBullets();
-	void updateEnemies();
-	void updateCombat();
+	void updateEnemiesUpDown();
+	void updateEnemiesLeftRight();
+	void updateEnemiesPower();
+	void updateCombatUpDown();
+	void updateCombatLeftRight();
+	void updateGunDrop();
+	void updateGunType();
 	void update();
 
 	//Render
+	void renderGunDrop();
 	void renderGUI();
 	void renderWorld();
 	void render();

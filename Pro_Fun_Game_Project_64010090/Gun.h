@@ -9,48 +9,33 @@
 using namespace sf;
 
 
-class Player
+class Gun
 {
 private:
 	Sprite sprite;
 	Texture texture;
 
-	int animation;
-	int animationDelay;
-
 	float movementspeed;
 
-	float attackCooldown;
-	float attackCooldownMax;
-
-	int hp;
-	int hpMax;
+	int gunType;
 
 	//Private Functions
 	void initVariables();
 	void initTexture();
 	void initSprite();
 public:
-	Player();
-	virtual ~Player();
+	Gun();
+	virtual ~Gun();
 
 	//Accessor
 	const Vector2f& getPos() const;
-	const FloatRect getBounds() const;
-	const int& getHp() const;
-	const int& getHpMax() const;
 
-	//Modifiers
-	void setHp(const int hp);
-	void loseHp(const int value);
 
 	//Functions
 	void move(const float dir_X, const float dir_Y);
-	const bool canAttack();
-
+	void updateSpriteTextures(int gunType);
 	void updateSprite();
-	void updateAttackStatus(float attackCoolDownMaxUpdate);
-	void updateAttack();
+	void updatePosSprite(float pos_x,float pos_y);
 	void update();
 	void render(RenderTarget& target);
 };

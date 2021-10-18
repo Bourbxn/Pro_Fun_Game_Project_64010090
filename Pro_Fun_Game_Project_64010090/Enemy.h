@@ -17,10 +17,16 @@ class Enemy
 private:
 	Sprite enemySprite;
 	Texture enemyTexture;
+	Clock clock;
 
 	int type;
+	float time;
 	float speed_y;
 	float speed_x;
+	int dir_y;
+	int last_dir_x;
+	int dir_x;
+	int last_dir_y;
 	int hp;
 	int hpMax;
 	int damage;
@@ -40,6 +46,8 @@ public:
 	const FloatRect getBounds() const;
 	
 	//Functions
+	void updateEnemyMoveUpDown();
+	void updateEnemyMoveLeftRight();
 	void update();
 	void render(RenderTarget* target);
 };

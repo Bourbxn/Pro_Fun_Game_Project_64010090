@@ -11,7 +11,7 @@ Bullet::Bullet(Texture * texture,int degree, float pos_x, float pos_y, float dir
 	this->shape.setTexture(*texture);
 	this->shape.setRotation(degree);
 	this->shape.setPosition(pos_x, pos_y-60);
-	this->shape.scale(2.f, 2.f);
+	this->shape.scale(1.5f, 1.5f);
 	this->direction.x = dir_x;
 	this->direction.y = dir_y;
 	this->movementspeed = movement_speed;
