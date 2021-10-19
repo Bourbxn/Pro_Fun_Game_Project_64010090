@@ -91,6 +91,7 @@ void Game::initGun()
 {
 	this->gun = new Gun();
 	this->gunDropState = false;
+	this->gunRandomTypeState = true;
 	this->gunRandomState = true;
 	this->gunType = 0;
 	this->playerAttackCoolDownMax = 15.f;
@@ -182,7 +183,15 @@ void Game::updateInput()
 	if (Keyboard::isKeyPressed(Keyboard::Key::Left) && this->player->getPos().x > 0)
 	{
 		this->player->move(-1.f, 0.f);
-		this->gun->updatePosSprite(this->player->getPos().x - 10.f, this->player->getPos().y + 75.f);
+		//Set each gun Type Direction
+		if (this->gunType == 0 || this->gunType == 1)
+		{
+			this->gun->updatePosSprite(this->player->getPos().x - 10.f, this->player->getPos().y + 75.f);
+		}
+		else if (this->gunType == 2)
+		{
+			this->gun->updatePosSprite(this->player->getPos().x - 50.f, this->player->getPos().y + 52.f);
+		}
 		this->bulletDirX = -1;
 		this->bulletDirY = 0;
 		this->bulletPosX = (this->player->getPos().x) + (this->player->getBounds().width / 2.f) - 22;
@@ -192,7 +201,15 @@ void Game::updateInput()
 	if (Keyboard::isKeyPressed(Keyboard::Key::Right) && this->player->getPos().x < this->window->getSize().x - 100)
 	{
 		this->player->move(1.f, 0.f);
-		this->gun->updatePosSprite(this->player->getPos().x + 80.f, this->player->getPos().y + 75.f);
+		//Set each gun Type Direction
+		if (this->gunType == 0 || this->gunType == 1)
+		{
+			this->gun->updatePosSprite(this->player->getPos().x + 80.f, this->player->getPos().y + 75.f);
+		}
+		else if (this->gunType == 2)
+		{
+			this->gun->updatePosSprite(this->player->getPos().x + 72.f, this->player->getPos().y + 48.f);
+		}
 		this->bulletDirX = 1;
 		this->bulletDirY = 0;
 		this->bulletPosX = (this->player->getPos().x) + (this->player->getBounds().width / 2.f) + 30;
@@ -201,7 +218,15 @@ void Game::updateInput()
 	}
 	if (Keyboard::isKeyPressed(Keyboard::Key::Up) && this->player->getPos().y > 0) {
 		this->player->move(0.f, -1.f);
-		this->gun->updatePosSprite(this->player->getPos().x, this->player->getPos().y);
+		//Set each gun Type Direction
+		if (this->gunType == 0 || this->gunType == 1)
+		{
+			this->gun->updatePosSprite(this->player->getPos().x, this->player->getPos().y);
+		}
+		else if (this->gunType == 2)
+		{
+			this->gun->updatePosSprite(this->player->getPos().x  , this->player->getPos().y);
+		}
 		this->bulletDirX = 0;
 		this->bulletDirY = -1;
 		this->bulletPosX = (this->player->getPos().x) + (this->player->getBounds().width / 2.f);
@@ -211,7 +236,15 @@ void Game::updateInput()
 	if (Keyboard::isKeyPressed(Keyboard::Key::Down) && this->player->getPos().y < window->getSize().y-140)
 	{
 		this->player->move(0.f, 1.f);
-		this->gun->updatePosSprite(this->player->getPos().x + 34.f, this->player->getPos().y + 85.f);
+		//Set each gun Type Direction
+		if (this->gunType == 0 || this->gunType == 1)
+		{
+			this->gun->updatePosSprite(this->player->getPos().x + 34.f, this->player->getPos().y + 85.f);
+		}
+		else if (this->gunType == 2)
+		{
+			this->gun->updatePosSprite(this->player->getPos().x + 12.f, this->player->getPos().y + 72.f);
+		}
 		this->bulletDirX = 0;
 		this->bulletDirY = 1;
 		this->bulletPosX = (this->player->getPos().x) + (this->player->getBounds().width / 2.f) +10;
@@ -227,6 +260,10 @@ void Game::updateInput()
 			this->pistolShotSFX.play();
 		}
 		else if (this->gunType == 1)
+		{
+			this->pistolShotSFX.play();
+		}
+		else if (this->gunType == 2)
 		{
 			this->pistolShotSFX.play();
 		}
@@ -434,19 +471,21 @@ void Game::updateCombatLeftRight()
 void Game::updateGunDrop()
 {
 	//Random Gun
-	if (this->points % 5 == 0 && this->points != 0 && this->gunCorrect == false)
+	if (this->points % 5 == 0 && this->points != 0 && this->gunCorrect == false && this->gunRandomTypeState==true)
 	{
-		this->gunDropPercent = rand() % 1000 + 1;
-		if (this->gunDropPercent >= 1 && this->gunDropPercent <= 600)
+		this->gunDropPercent = rand() % 99 + 1;
+		std::cout << gunDropPercent << std::endl;
+		if (this->gunDropPercent >= 1 && this->gunDropPercent <= 55)
 		{
 			this->gunDropItem = 1;
 		}
-		else if (this->gunDropPercent > 600 && this->gunDropPercent <= 1000)
+		else if (this->gunDropPercent > 55 && this->gunDropPercent <= 100)
 		{
 			this->gunDropItem = 2;
 		}
 		this->gunDropState = true;
 		this->gunRandomState = false;
+		this->gunRandomTypeState = false;
 	}
 	else if (this->points % 5 != 0 && this->gunCorrect == true)
 	{
@@ -464,7 +503,7 @@ void Game::updateGunDrop()
 	//Gun Drop
 	if (this->gunDropItem == 1)
 	{
-		if (!this->textureGunDrop.loadFromFile("Textures/Uzi_rare_02_drop.png"))
+		if (!this->textureGunDrop.loadFromFile("Textures/Uzi_rare_01_drop.png"))
 		{
 			std::cout << "ERROR::GUN::INITTEXTURE::Could not load textures file." << "\n";
 		}
@@ -475,21 +514,20 @@ void Game::updateGunDrop()
 	}
 	else if (this->gunDropItem == 2)
 	{
-		/*
-		if (!this->textureGunDrop.loadFromFile("Textures/Uzi_rare_02_drop.png"))
+		if (!this->textureGunDrop.loadFromFile("Textures/P90_mythical_02_Drop.png"))
 		{
 			std::cout << "ERROR::GUN::INITTEXTURE::Could not load textures file." << "\n";
 		}
 		this->spriteGunDrop.setTexture(this->textureGunDrop);
-		this->spriteGunDrop.setScale(1.5f, 1.5f);
-		this->spriteGunDrop.setPosition(this->gunDropPos_x, this->gunDropPos_y);*/
-
+		this->spriteGunDrop.setScale(1.25f, 1.25f);
+		this->spriteGunDrop.setPosition(this->gunDropPos_x, this->gunDropPos_y);
 	}
 
 	//Collect Gun
 	if (this->spriteGunDrop.getGlobalBounds().intersects(this->player->getBounds()) && this->gunDropState==true)
 	{
 		this->gunType = this->gunDropItem;
+		this->gunRandomTypeState = true;
 		this->gunRandomState = true;
 		this->gunDropState = false;
 		this->gunCorrect = true;
@@ -500,6 +538,7 @@ void Game::updateGunDrop()
 		this->deltaTime += 1;
 		if (this->deltaTime == 1000)
 		{
+			this->gunRandomTypeState = true;
 			this->gunRandomState = true;
 			this->gunDropState = false;
 			this->gunCorrect = true;
@@ -517,7 +556,7 @@ void Game::updateGunType()
 	}
 	else if (this->gunType == 2)
 	{
-		this->playerAttackCoolDownMax = 8.f;
+		this->playerAttackCoolDownMax = 7.5f;
 	}
 }
 	

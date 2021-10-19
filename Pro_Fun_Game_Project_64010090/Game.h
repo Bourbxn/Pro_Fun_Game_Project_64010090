@@ -78,6 +78,7 @@ private:
 	//Gun
 	bool gunDropState;
 	bool gunRandomState;
+	bool gunRandomTypeState;
 	bool gunCorrect;
 	int gunDropItem;
 	unsigned int gunDropPercent;

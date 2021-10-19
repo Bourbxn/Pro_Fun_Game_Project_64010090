@@ -8,7 +8,7 @@ void Gun::initVariables()
 
 void Gun::initTexture()
 {
-	if (!this->texture.loadFromFile("Textures/Pistol_common_01.png"))
+	if (!this->texture.loadFromFile("Textures/Pistol_common_00.png"))
 	{
 		std::cout << "ERROR::GUN::INITTEXTURE::Could not load textures file." << "\n";
 	}
@@ -54,7 +54,7 @@ void Gun::updateSpriteTextures(int gunType)
 {
 	if (gunType == 1)
 	{
-		if (!this->texture.loadFromFile("Textures/Uzi_rare_02.png"))
+		if (!this->texture.loadFromFile("Textures/Uzi_rare_01.png"))
 		{
 			std::cout << "ERROR::GUN::INITTEXTURE::Could not load textures file." << "\n";
 		}
@@ -62,12 +62,10 @@ void Gun::updateSpriteTextures(int gunType)
 
 	else if (gunType == 2)
 	{
-		/*
-		if (!this->texture.loadFromFile("Textures/Uzi_rare_02.png"))
+		if (!this->texture.loadFromFile("Textures/P90_mythical_02.png"))
 		{
 			std::cout << "ERROR::GUN::INITTEXTURE::Could not load textures file." << "\n";
 		}
-		*/
 	}
 }
 
