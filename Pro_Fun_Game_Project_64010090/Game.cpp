@@ -20,6 +20,10 @@ void Game::initAudio()
 		std::cout << "ERROR::GAME::Failed to load pistol shot audio" << "\n";
 		pistolShotSFX.setBuffer(pistolShot);
 		pistolShotSFX.setVolume(100);
+	if (!alienShot.loadFromFile("Audio/Alien_shot_sfx.wav"))
+		std::cout << "ERROR::GAME::Failed to load Alien shot audio" << "\n";
+		alienShotSFX.setBuffer(alienShot);
+		alienShotSFX.setVolume(40);
 	//Combat Sound
 	if (!zombieDeath.loadFromFile("Audio/zombie_death_sfx.wav"))
 		std::cout << "ERROR::GAME::Failed to load zombie death audio" << "\n";
@@ -183,78 +187,240 @@ void Game::updateInput()
 	if (Keyboard::isKeyPressed(Keyboard::Key::Left) && this->player->getPos().x > 0)
 	{
 		this->player->move(-1.f, 0.f);
-		//Set each gun Type Direction
+		//Set each gun Type Direction "Left"
+		//Pistol & Uzi
 		if (this->gunType == 0 || this->gunType == 1)
 		{
 			this->gun->updatePosSprite(this->player->getPos().x - 10.f, this->player->getPos().y + 75.f);
+			this->bulletPosX = (this->player->getPos().x) + (this->player->getBounds().width / 2.f) - 22;
+			this->bulletPosY = (this->player->getPos().y) + 159;
 		}
+		//P90
 		else if (this->gunType == 2)
 		{
 			this->gun->updatePosSprite(this->player->getPos().x - 50.f, this->player->getPos().y + 52.f);
+			this->bulletPosX = (this->player->getPos().x) + (this->player->getBounds().width / 2.f) - 60;
+			this->bulletPosY = (this->player->getPos().y) + 160;
+		}
+		//AK47
+		else if (this->gunType == 3)
+		{
+
+			this->gun->updatePosSprite(this->player->getPos().x - 55.f, this->player->getPos().y + 52.f);
+			this->bulletPosX = (this->player->getPos().x) + (this->player->getBounds().width / 2.f) - 75;
+			this->bulletPosY = (this->player->getPos().y) + 160;
+		}
+		//M4A1
+		else if (this->gunType == 4)
+		{
+
+			this->gun->updatePosSprite(this->player->getPos().x - 55.f, this->player->getPos().y + 52.f);
+			this->bulletPosX = (this->player->getPos().x) + (this->player->getBounds().width / 2.f) - 75;
+			this->bulletPosY = (this->player->getPos().y) + 159;
+		}
+		//Saxophone
+		else if (this->gunType == 5)
+		{
+
+			this->gun->updatePosSprite(this->player->getPos().x - 55.f, this->player->getPos().y + 52.f);
+			this->bulletPosX = (this->player->getPos().x) + (this->player->getBounds().width / 2.f) - 75;
+			this->bulletPosY = (this->player->getPos().y) + 160;
+		}
+		//Alien
+		else if (this->gunType == 6)
+		{
+
+			this->gun->updatePosSprite(this->player->getPos().x - 48.f, this->player->getPos().y + 52.f);
+			this->bulletPosX = (this->player->getPos().x) + (this->player->getBounds().width / 2.f) - 128;
+			this->bulletPosY = (this->player->getPos().y) + 158;
+		}
+		//Capricorn
+		else if (this->gunType == 7)
+		{
+
+			this->gun->updatePosSprite(this->player->getPos().x - 48.f, this->player->getPos().y + 52.f);
+			this->bulletPosX = (this->player->getPos().x) + (this->player->getBounds().width / 2.f) - 75;
+			this->bulletPosY = (this->player->getPos().y) + 160;
 		}
 		this->bulletDirX = -1;
 		this->bulletDirY = 0;
-		this->bulletPosX = (this->player->getPos().x) + (this->player->getBounds().width / 2.f) - 22;
-		this->bulletPosY = (this->player->getPos().y) + 159;
 		this->bulletRotDeg = -90;
 	}
 	if (Keyboard::isKeyPressed(Keyboard::Key::Right) && this->player->getPos().x < this->window->getSize().x - 100)
 	{
 		this->player->move(1.f, 0.f);
-		//Set each gun Type Direction
+		//Set each gun Type Direction "Right"
+		//Pistol & Uzi
 		if (this->gunType == 0 || this->gunType == 1)
 		{
 			this->gun->updatePosSprite(this->player->getPos().x + 80.f, this->player->getPos().y + 75.f);
+			this->bulletPosX = (this->player->getPos().x) + (this->player->getBounds().width / 2.f) + 30;
+			this->bulletPosY = (this->player->getPos().y) + 145;
 		}
+		//P90
 		else if (this->gunType == 2)
 		{
 			this->gun->updatePosSprite(this->player->getPos().x + 72.f, this->player->getPos().y + 48.f);
+			this->bulletPosX = (this->player->getPos().x) + (this->player->getBounds().width / 2.f) + 65;
+			this->bulletPosY = (this->player->getPos().y) + 149;
+		}
+		//AK47
+		else if (this->gunType == 3)
+		{
+			this->gun->updatePosSprite(this->player->getPos().x + 77.f, this->player->getPos().y + 54.f);
+			this->bulletPosX = (this->player->getPos().x) + (this->player->getBounds().width / 2.f) + 80;
+			this->bulletPosY = (this->player->getPos().y) + 150;
+		}
+		//M4A1
+		else if (this->gunType == 4)
+		{
+			this->gun->updatePosSprite(this->player->getPos().x + 77.f, this->player->getPos().y + 52.f);
+			this->bulletPosX = (this->player->getPos().x) + (this->player->getBounds().width / 2.f) + 80;
+			this->bulletPosY = (this->player->getPos().y) + 147;
+		}
+		//Saxophone
+		else if (this->gunType == 5)
+		{
+			this->gun->updatePosSprite(this->player->getPos().x + 77.f, this->player->getPos().y + 53.f);
+			this->bulletPosX = (this->player->getPos().x) + (this->player->getBounds().width / 2.f) + 80;
+			this->bulletPosY = (this->player->getPos().y) + 150;
+		}
+		//Alien
+		else if (this->gunType == 6)
+		{
+			this->gun->updatePosSprite(this->player->getPos().x + 70.f, this->player->getPos().y + 51.f);
+			this->bulletPosX = (this->player->getPos().x) + (this->player->getBounds().width / 2.f) + 133;
+			this->bulletPosY = (this->player->getPos().y) + 145;
+		}
+		//Capricon
+		else if (this->gunType == 7)
+		{
+			this->gun->updatePosSprite(this->player->getPos().x + 70.f, this->player->getPos().y + 51.f);
+			this->bulletPosX = (this->player->getPos().x) + (this->player->getBounds().width / 2.f) + 80;
+			this->bulletPosY = (this->player->getPos().y) + 150;
 		}
 		this->bulletDirX = 1;
 		this->bulletDirY = 0;
-		this->bulletPosX = (this->player->getPos().x) + (this->player->getBounds().width / 2.f) + 30;
-		this->bulletPosY = (this->player->getPos().y) + 145;
 		this->bulletRotDeg = 90;
 	}
 	if (Keyboard::isKeyPressed(Keyboard::Key::Up) && this->player->getPos().y > 0) {
 		this->player->move(0.f, -1.f);
-		//Set each gun Type Direction
+		//Set each gun Type Direction "Up"
+		//Pistol & Uzi
 		if (this->gunType == 0 || this->gunType == 1)
 		{
 			this->gun->updatePosSprite(this->player->getPos().x, this->player->getPos().y);
+			this->bulletPosX = (this->player->getPos().x) + (this->player->getBounds().width / 2.f);
+			this->bulletPosY = (this->player->getPos().y) + 100;
 		}
+		//P90
 		else if (this->gunType == 2)
 		{
 			this->gun->updatePosSprite(this->player->getPos().x  , this->player->getPos().y);
+			this->bulletPosX = (this->player->getPos().x) + (this->player->getBounds().width / 2.f);
+			this->bulletPosY = (this->player->getPos().y) + 100;
+		}
+		//AK47
+		else if (this->gunType == 3)
+		{
+			this->gun->updatePosSprite(this->player->getPos().x, this->player->getPos().y);
+			this->bulletPosX = (this->player->getPos().x) + (this->player->getBounds().width / 2.f);
+			this->bulletPosY = (this->player->getPos().y) + 100;
+		}
+		//M4A1
+		else if (this->gunType == 4)
+		{
+			this->gun->updatePosSprite(this->player->getPos().x, this->player->getPos().y);
+			this->bulletPosX = (this->player->getPos().x) + (this->player->getBounds().width / 2.f);
+			this->bulletPosY = (this->player->getPos().y) + 100;
+		}
+		//Saxophone
+		else if (this->gunType == 5)
+		{
+			this->gun->updatePosSprite(this->player->getPos().x, this->player->getPos().y);
+			this->bulletPosX = (this->player->getPos().x) + (this->player->getBounds().width / 2.f);
+			this->bulletPosY = (this->player->getPos().y) + 100;
+		}
+		//Alien
+		else if (this->gunType == 6)
+		{
+			this->gun->updatePosSprite(this->player->getPos().x, this->player->getPos().y);
+			this->bulletPosX = (this->player->getPos().x) + (this->player->getBounds().width / 2.f);
+			this->bulletPosY = (this->player->getPos().y) + 40;
+		}
+		//Capricorn
+		else if (this->gunType == 7)
+		{
+			this->gun->updatePosSprite(this->player->getPos().x, this->player->getPos().y);
+			this->bulletPosX = (this->player->getPos().x) + (this->player->getBounds().width / 2.f);
+			this->bulletPosY = (this->player->getPos().y) + 100;
 		}
 		this->bulletDirX = 0;
 		this->bulletDirY = -1;
-		this->bulletPosX = (this->player->getPos().x) + (this->player->getBounds().width / 2.f);
-		this->bulletPosY = (this->player->getPos().y) + 100;
 		this->bulletRotDeg = 0;
 	}
 	if (Keyboard::isKeyPressed(Keyboard::Key::Down) && this->player->getPos().y < window->getSize().y-140)
 	{
 		this->player->move(0.f, 1.f);
-		//Set each gun Type Direction
+		//Set each gun Type Direction "Down"
+		//Pistol & Uzi
 		if (this->gunType == 0 || this->gunType == 1)
 		{
 			this->gun->updatePosSprite(this->player->getPos().x + 34.f, this->player->getPos().y + 85.f);
+			this->bulletPosX = (this->player->getPos().x) + (this->player->getBounds().width / 2.f) + 10;
+			this->bulletPosY = (this->player->getPos().y) + 150;
 		}
+		//P90
 		else if (this->gunType == 2)
 		{
 			this->gun->updatePosSprite(this->player->getPos().x + 12.f, this->player->getPos().y + 72.f);
+			this->bulletPosX = (this->player->getPos().x) + (this->player->getBounds().width / 2.f) + 10;
+			this->bulletPosY = (this->player->getPos().y) + 180;
+		}
+		//AK47
+		else if (this->gunType == 3)
+		{
+			this->gun->updatePosSprite(this->player->getPos().x + 13.f, this->player->getPos().y + 72.f);
+			this->bulletPosX = (this->player->getPos().x) + (this->player->getBounds().width / 2.f) + 10;
+			this->bulletPosY = (this->player->getPos().y) + 180;
+		}
+		//M4A1
+		else if (this->gunType == 4)
+		{
+			this->gun->updatePosSprite(this->player->getPos().x + 12.f, this->player->getPos().y + 72.f);
+			this->bulletPosX = (this->player->getPos().x) + (this->player->getBounds().width / 2.f) + 9;
+			this->bulletPosY = (this->player->getPos().y) + 187;
+		}
+		//Saxophone
+		else if (this->gunType == 5)
+		{
+			this->gun->updatePosSprite(this->player->getPos().x + 12.f, this->player->getPos().y + 72.f);
+			this->bulletPosX = (this->player->getPos().x) + (this->player->getBounds().width / 2.f) + 10;
+			this->bulletPosY = (this->player->getPos().y) + 180;
+		}
+		//Alien
+		else if (this->gunType == 6)
+		{
+			this->gun->updatePosSprite(this->player->getPos().x + 12.f, this->player->getPos().y + 72.f);
+			this->bulletPosX = (this->player->getPos().x) + (this->player->getBounds().width / 2.f) + 10;
+			this->bulletPosY = (this->player->getPos().y) + 180;
+		}
+		//Capricorn
+		else if (this->gunType == 7)
+		{
+			this->gun->updatePosSprite(this->player->getPos().x + 12.f, this->player->getPos().y + 72.f);
+			this->bulletPosX = (this->player->getPos().x) + (this->player->getBounds().width / 2.f) + 10;
+			this->bulletPosY = (this->player->getPos().y) + 180;
 		}
 		this->bulletDirX = 0;
 		this->bulletDirY = 1;
-		this->bulletPosX = (this->player->getPos().x) + (this->player->getBounds().width / 2.f) +10;
-		this->bulletPosY = (this->player->getPos().y) + 150;
 		this->bulletRotDeg = 180;
 	}
 
 
 	if (sf::Keyboard::isKeyPressed(Keyboard::Key::Space) && this->player->canAttack())
 	{
+		//Set sound for each gun Type
 		if (this->gunType == 0)
 		{
 			this->pistolShotSFX.play();
@@ -264,6 +430,26 @@ void Game::updateInput()
 			this->pistolShotSFX.play();
 		}
 		else if (this->gunType == 2)
+		{
+			this->pistolShotSFX.play();
+		}
+		else if (this->gunType == 3)
+		{
+			this->pistolShotSFX.play();
+		}
+		else if (this->gunType == 4)
+		{
+			this->pistolShotSFX.play();
+		}
+		else if (this->gunType == 5)
+		{
+			this->pistolShotSFX.play();
+		}
+		else if (this->gunType == 6)
+		{
+			this->alienShotSFX.play();
+		}
+		else if (this->gunType == 7)
 		{
 			this->pistolShotSFX.play();
 		}
@@ -302,7 +488,37 @@ void Game::updateTextures()
 		this->textures["BULLET"] = new Texture();
 		this->textures["BULLET"]->loadFromFile("Textures/bullet.png");
 	}
-	if (this->gunType == 1)
+	else if (this->gunType == 1)
+	{
+		this->textures["BULLET"] = new Texture();
+		this->textures["BULLET"]->loadFromFile("Textures/bullet.png");
+	}
+	else if (this->gunType == 2)
+	{
+		this->textures["BULLET"] = new Texture();
+		this->textures["BULLET"]->loadFromFile("Textures/bullet.png");
+	}
+	else if (this->gunType == 3)
+	{
+		this->textures["BULLET"] = new Texture();
+		this->textures["BULLET"]->loadFromFile("Textures/bullet.png");
+	}
+	else if (this->gunType == 4)
+	{
+		this->textures["BULLET"] = new Texture();
+		this->textures["BULLET"]->loadFromFile("Textures/bullet.png");
+	}
+	else if (this->gunType == 5)
+	{
+		this->textures["BULLET"] = new Texture();
+		this->textures["BULLET"]->loadFromFile("Textures/bullet.png");
+	}
+	else if (this->gunType == 6)
+	{
+		this->textures["BULLET"] = new Texture();
+		this->textures["BULLET"]->loadFromFile("Textures/Alien_bullet.png");
+	}
+	else if (this->gunType == 7)
 	{
 		this->textures["BULLET"] = new Texture();
 		this->textures["BULLET"]->loadFromFile("Textures/bullet.png");
@@ -428,7 +644,23 @@ void Game::updateCombatUpDown()
 			{
 				this->zombieDeathSFX.play();
 
-				this->points += 1;
+				//Points in each gun type
+				if (this->gunType == 0 || this->gunType == 1 || this->gunType == 2 || this->gunType == 3 || this->gunType == 4)
+				{
+					this->points += 1;
+				}
+				else if (this->gunType == 5)
+				{
+					this->points += 2;
+				}
+				else if (this->gunType == 6)
+				{
+					this->points += 2;
+				}
+				else if (this->gunType == 7)
+				{
+					this->points += 10;
+				}
 
 				delete this->enemiesUpDown[i];
 				this->enemiesUpDown.erase(this->enemiesUpDown.begin() + i);
@@ -454,7 +686,23 @@ void Game::updateCombatLeftRight()
 			{
 				this->zombieDeathSFX.play();
 
-				this->points += 1;
+				//Points in each gun type
+				if (this->gunType == 0 || this->gunType == 1 || this->gunType == 2 || this->gunType == 3 || this->gunType == 4)
+				{
+					this->points += 1;
+				}
+				else if (this->gunType == 5)
+				{
+					this->points += 2;
+				}
+				else if (this->gunType == 6)
+				{
+					this->points += 2;
+				}
+				else if (this->gunType == 7)
+				{
+					this->points += 10;
+				}
 
 				delete this->enemiesLeftRight[i];
 				this->enemiesLeftRight.erase(this->enemiesLeftRight.begin() + i);
@@ -471,23 +719,43 @@ void Game::updateCombatLeftRight()
 void Game::updateGunDrop()
 {
 	//Random Gun
-	if (this->points % 5 == 0 && this->points != 0 && this->gunCorrect == false && this->gunRandomTypeState==true)
+	if (this->points % 50 == 0 && this->points != 0 && this->gunCorrect == false && this->gunRandomTypeState==true)
 	{
 		this->gunDropPercent = rand() % 99 + 1;
 		std::cout << gunDropPercent << std::endl;
-		if (this->gunDropPercent >= 1 && this->gunDropPercent <= 55)
+		if (this->gunDropPercent >= 1 && this->gunDropPercent <= 20)
 		{
 			this->gunDropItem = 1;
 		}
-		else if (this->gunDropPercent > 55 && this->gunDropPercent <= 100)
+		else if (this->gunDropPercent > 21 && this->gunDropPercent <= 40)
 		{
 			this->gunDropItem = 2;
+		}
+		else if (this->gunDropPercent > 41 && this->gunDropPercent <= 60)
+		{
+			this->gunDropItem = 3;
+		}
+		else if (this->gunDropPercent > 61 && this->gunDropPercent <= 80)
+		{
+			this->gunDropItem = 4;
+		}
+		else if (this->gunDropPercent > 81 && this->gunDropPercent <= 90)
+		{
+			this->gunDropItem = 5;
+		}
+		else if (this->gunDropPercent > 90 && this->gunDropPercent <= 96)
+		{
+			this->gunDropItem = 6;
+		}
+		else if (this->gunDropPercent > 96 && this->gunDropPercent <= 100)
+		{
+			this->gunDropItem = 7;
 		}
 		this->gunDropState = true;
 		this->gunRandomState = false;
 		this->gunRandomTypeState = false;
 	}
-	else if (this->points % 5 != 0 && this->gunCorrect == true)
+	else if (this->points % 50 != 0 && this->gunCorrect == true)
 	{
 		this->gunCorrect = false;
 	}
@@ -508,13 +776,63 @@ void Game::updateGunDrop()
 			std::cout << "ERROR::GUN::INITTEXTURE::Could not load textures file." << "\n";
 		}
 		this->spriteGunDrop.setTexture(this->textureGunDrop);
-		this->spriteGunDrop.setScale(1.5f, 1.5f);
+		this->spriteGunDrop.setScale(1.25f, 1.25f);
 		this->spriteGunDrop.setPosition(this->gunDropPos_x, this->gunDropPos_y);
 		
 	}
 	else if (this->gunDropItem == 2)
 	{
 		if (!this->textureGunDrop.loadFromFile("Textures/P90_mythical_02_Drop.png"))
+		{
+			std::cout << "ERROR::GUN::INITTEXTURE::Could not load textures file." << "\n";
+		}
+		this->spriteGunDrop.setTexture(this->textureGunDrop);
+		this->spriteGunDrop.setScale(1.25f, 1.25f);
+		this->spriteGunDrop.setPosition(this->gunDropPos_x, this->gunDropPos_y);
+	}
+	else if (this->gunDropItem == 3)
+	{
+		if (!this->textureGunDrop.loadFromFile("Textures/AK47_legendary_03_Drop.png"))
+		{
+			std::cout << "ERROR::GUN::INITTEXTURE::Could not load textures file." << "\n";
+		}
+		this->spriteGunDrop.setTexture(this->textureGunDrop);
+		this->spriteGunDrop.setScale(1.25f, 1.25f);
+		this->spriteGunDrop.setPosition(this->gunDropPos_x, this->gunDropPos_y);
+	}
+	else if (this->gunDropItem == 4)
+	{
+		if (!this->textureGunDrop.loadFromFile("Textures/M4A1_ancient_04.png"))
+		{
+			std::cout << "ERROR::GUN::INITTEXTURE::Could not load textures file." << "\n";
+		}
+		this->spriteGunDrop.setTexture(this->textureGunDrop);
+		this->spriteGunDrop.setScale(1.25f, 1.25f);
+		this->spriteGunDrop.setPosition(this->gunDropPos_x, this->gunDropPos_y);
+	}
+	else if (this->gunDropItem == 5)
+	{
+		if (!this->textureGunDrop.loadFromFile("Textures/Saxophone_ExceedinglyRare_05_Drop.png"))
+		{
+			std::cout << "ERROR::GUN::INITTEXTURE::Could not load textures file." << "\n";
+		}
+		this->spriteGunDrop.setTexture(this->textureGunDrop);
+		this->spriteGunDrop.setScale(1.25f, 1.25f);
+		this->spriteGunDrop.setPosition(this->gunDropPos_x, this->gunDropPos_y);
+	}
+	else if (this->gunDropItem == 6)
+	{
+		if (!this->textureGunDrop.loadFromFile("Textures/Alien_immortal_06_Drop.png"))
+		{
+			std::cout << "ERROR::GUN::INITTEXTURE::Could not load textures file." << "\n";
+		}
+		this->spriteGunDrop.setTexture(this->textureGunDrop);
+		this->spriteGunDrop.setScale(1.25f, 1.25f);
+		this->spriteGunDrop.setPosition(this->gunDropPos_x, this->gunDropPos_y);
+	}
+	else if (this->gunDropItem == 7)
+	{
+		if (!this->textureGunDrop.loadFromFile("Textures/Capricorn_godmode_07_Drop.png"))
 		{
 			std::cout << "ERROR::GUN::INITTEXTURE::Could not load textures file." << "\n";
 		}
@@ -536,7 +854,7 @@ void Game::updateGunDrop()
 	else if(!this->spriteGunDrop.getGlobalBounds().intersects(this->player->getBounds()) && this->gunDropState==true)
 	{
 		this->deltaTime += 1;
-		if (this->deltaTime == 1000)
+		if (this->deltaTime == 600)
 		{
 			this->gunRandomTypeState = true;
 			this->gunRandomState = true;
@@ -557,6 +875,26 @@ void Game::updateGunType()
 	else if (this->gunType == 2)
 	{
 		this->playerAttackCoolDownMax = 7.5f;
+	}
+	else if (this->gunType == 3)
+	{
+		this->playerAttackCoolDownMax = 6.5f;
+	}
+	else if (this->gunType == 4)
+	{
+		this->playerAttackCoolDownMax = 5.f;
+	}
+	else if (this->gunType == 5)
+	{
+		this->playerAttackCoolDownMax = 5.f;
+	}
+	else if (this->gunType == 6)
+	{
+		this->playerAttackCoolDownMax = 2.f;
+	}
+	else if (this->gunType == 7)
+	{
+		this->playerAttackCoolDownMax = 5.f;
 	}
 }
 	

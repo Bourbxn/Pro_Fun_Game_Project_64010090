@@ -20,6 +20,8 @@ private:
 	//SFX
 	SoundBuffer pistolShot;
 	Sound pistolShotSFX;
+	SoundBuffer alienShot;
+	Sound alienShotSFX;
 	SoundBuffer zombieDeath;
 	Sound zombieDeathSFX;
 	SoundBuffer bourbxnHurt;

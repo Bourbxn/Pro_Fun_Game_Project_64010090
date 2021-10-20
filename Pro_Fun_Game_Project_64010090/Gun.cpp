@@ -67,6 +67,41 @@ void Gun::updateSpriteTextures(int gunType)
 			std::cout << "ERROR::GUN::INITTEXTURE::Could not load textures file." << "\n";
 		}
 	}
+	else if (gunType == 3)
+	{
+		if (!this->texture.loadFromFile("Textures/AK47_legendary_03.png"))
+		{
+			std::cout << "ERROR::GUN::INITTEXTURE::Could not load textures file." << "\n";
+		}
+	}
+	else if (gunType == 4)
+	{
+		if (!this->texture.loadFromFile("Textures/M4A1_ancient_04_Drop.png"))
+		{
+			std::cout << "ERROR::GUN::INITTEXTURE::Could not load textures file." << "\n";
+		}
+	}
+	else if (gunType == 5)
+	{
+		if (!this->texture.loadFromFile("Textures/Saxophone_ExceedinglyRare_05.png"))
+		{
+			std::cout << "ERROR::GUN::INITTEXTURE::Could not load textures file." << "\n";
+		}
+	}
+	else if (gunType == 6)
+	{
+		if (!this->texture.loadFromFile("Textures/Alien_immortal_06.png"))
+		{
+			std::cout << "ERROR::GUN::INITTEXTURE::Could not load textures file." << "\n";
+		}
+	}
+	else if (gunType == 7)
+	{
+		if (!this->texture.loadFromFile("Textures/Capricorn_godmode_07.png"))
+		{
+			std::cout << "ERROR::GUN::INITTEXTURE::Could not load textures file." << "\n";
+		}
+	}
 }
 
 void Gun::updateSprite()
