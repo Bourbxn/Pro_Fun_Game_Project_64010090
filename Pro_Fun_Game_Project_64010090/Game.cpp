@@ -23,7 +23,15 @@ void Game::initAudio()
 	if (!alienShot.loadFromFile("Audio/Alien_shot_sfx.wav"))
 		std::cout << "ERROR::GAME::Failed to load Alien shot audio" << "\n";
 		alienShotSFX.setBuffer(alienShot);
-		alienShotSFX.setVolume(40);
+		alienShotSFX.setVolume(30);
+	if (!saxophoneShot.loadFromFile("Audio/Saxophone_shot_sfx.wav"))
+		std::cout << "ERROR::GAME::Failed to load Saxophone shot audio" << "\n";
+		saxophoneShotSFX.setBuffer(saxophoneShot);
+		saxophoneShotSFX.setVolume(20);
+	if (!capricornShot.loadFromFile("Audio/Capricorn_shot_sfx.wav"))
+		std::cout << "ERROR::GAME::Failed to load Saxophone shot audio" << "\n";
+		capricornShotSFX.setBuffer(capricornShot);
+		capricornShotSFX.setVolume(20);
 	//Combat Sound
 	if (!zombieDeath.loadFromFile("Audio/zombie_death_sfx.wav"))
 		std::cout << "ERROR::GAME::Failed to load zombie death audio" << "\n";
@@ -102,6 +110,7 @@ void Game::initGun()
 	this->gunCorrectPlay = false;
 	this->gunDropPlay = true;
 	this->deltaTime = 0;
+	this->pointsDropGun = 10;
 }
 
 void Game::initEnemies()
@@ -224,7 +233,7 @@ void Game::updateInput()
 
 			this->gun->updatePosSprite(this->player->getPos().x - 55.f, this->player->getPos().y + 52.f);
 			this->bulletPosX = (this->player->getPos().x) + (this->player->getBounds().width / 2.f) - 75;
-			this->bulletPosY = (this->player->getPos().y) + 160;
+			this->bulletPosY = (this->player->getPos().y) + 190;
 		}
 		//Alien
 		else if (this->gunType == 6)
@@ -239,8 +248,8 @@ void Game::updateInput()
 		{
 
 			this->gun->updatePosSprite(this->player->getPos().x - 48.f, this->player->getPos().y + 52.f);
-			this->bulletPosX = (this->player->getPos().x) + (this->player->getBounds().width / 2.f) - 75;
-			this->bulletPosY = (this->player->getPos().y) + 160;
+			this->bulletPosX = (this->player->getPos().x) + (this->player->getBounds().width / 2.f) - 130;
+			this->bulletPosY = (this->player->getPos().y) + 180;
 		}
 		this->bulletDirX = -1;
 		this->bulletDirY = 0;
@@ -283,7 +292,7 @@ void Game::updateInput()
 		{
 			this->gun->updatePosSprite(this->player->getPos().x + 77.f, this->player->getPos().y + 53.f);
 			this->bulletPosX = (this->player->getPos().x) + (this->player->getBounds().width / 2.f) + 80;
-			this->bulletPosY = (this->player->getPos().y) + 150;
+			this->bulletPosY = (this->player->getPos().y) + 110;
 		}
 		//Alien
 		else if (this->gunType == 6)
@@ -296,8 +305,8 @@ void Game::updateInput()
 		else if (this->gunType == 7)
 		{
 			this->gun->updatePosSprite(this->player->getPos().x + 70.f, this->player->getPos().y + 51.f);
-			this->bulletPosX = (this->player->getPos().x) + (this->player->getBounds().width / 2.f) + 80;
-			this->bulletPosY = (this->player->getPos().y) + 150;
+			this->bulletPosX = (this->player->getPos().x) + (this->player->getBounds().width / 2.f) + 135;
+			this->bulletPosY = (this->player->getPos().y) + 135;
 		}
 		this->bulletDirX = 1;
 		this->bulletDirY = 0;
@@ -338,7 +347,7 @@ void Game::updateInput()
 		else if (this->gunType == 5)
 		{
 			this->gun->updatePosSprite(this->player->getPos().x, this->player->getPos().y);
-			this->bulletPosX = (this->player->getPos().x) + (this->player->getBounds().width / 2.f);
+			this->bulletPosX = (this->player->getPos().x) + (this->player->getBounds().width / 2.f) - 34;
 			this->bulletPosY = (this->player->getPos().y) + 100;
 		}
 		//Alien
@@ -352,8 +361,8 @@ void Game::updateInput()
 		else if (this->gunType == 7)
 		{
 			this->gun->updatePosSprite(this->player->getPos().x, this->player->getPos().y);
-			this->bulletPosX = (this->player->getPos().x) + (this->player->getBounds().width / 2.f);
-			this->bulletPosY = (this->player->getPos().y) + 100;
+			this->bulletPosX = (this->player->getPos().x) + (this->player->getBounds().width / 2.f)-18;
+			this->bulletPosY = (this->player->getPos().y) + 40;
 		}
 		this->bulletDirX = 0;
 		this->bulletDirY = -1;
@@ -395,22 +404,22 @@ void Game::updateInput()
 		else if (this->gunType == 5)
 		{
 			this->gun->updatePosSprite(this->player->getPos().x + 12.f, this->player->getPos().y + 72.f);
-			this->bulletPosX = (this->player->getPos().x) + (this->player->getBounds().width / 2.f) + 10;
-			this->bulletPosY = (this->player->getPos().y) + 180;
+			this->bulletPosX = (this->player->getPos().x) + (this->player->getBounds().width / 2.f) + 42;
+			this->bulletPosY = (this->player->getPos().y) + 200;
 		}
 		//Alien
 		else if (this->gunType == 6)
 		{
 			this->gun->updatePosSprite(this->player->getPos().x + 12.f, this->player->getPos().y + 72.f);
 			this->bulletPosX = (this->player->getPos().x) + (this->player->getBounds().width / 2.f) + 10;
-			this->bulletPosY = (this->player->getPos().y) + 180;
+			this->bulletPosY = (this->player->getPos().y) + 242;
 		}
 		//Capricorn
 		else if (this->gunType == 7)
 		{
 			this->gun->updatePosSprite(this->player->getPos().x + 12.f, this->player->getPos().y + 72.f);
-			this->bulletPosX = (this->player->getPos().x) + (this->player->getBounds().width / 2.f) + 10;
-			this->bulletPosY = (this->player->getPos().y) + 180;
+			this->bulletPosX = (this->player->getPos().x) + (this->player->getBounds().width / 2.f) + 26;
+			this->bulletPosY = (this->player->getPos().y) + 250;
 		}
 		this->bulletDirX = 0;
 		this->bulletDirY = 1;
@@ -443,7 +452,7 @@ void Game::updateInput()
 		}
 		else if (this->gunType == 5)
 		{
-			this->pistolShotSFX.play();
+			this->saxophoneShotSFX.play();
 		}
 		else if (this->gunType == 6)
 		{
@@ -451,7 +460,7 @@ void Game::updateInput()
 		}
 		else if (this->gunType == 7)
 		{
-			this->pistolShotSFX.play();
+			this->capricornShotSFX.play();
 		}
 		this->bullets.push_back(
 			new Bullet(
@@ -511,7 +520,7 @@ void Game::updateTextures()
 	else if (this->gunType == 5)
 	{
 		this->textures["BULLET"] = new Texture();
-		this->textures["BULLET"]->loadFromFile("Textures/bullet.png");
+		this->textures["BULLET"]->loadFromFile("Textures/Saxophone_bullet.png");
 	}
 	else if (this->gunType == 6)
 	{
@@ -521,7 +530,7 @@ void Game::updateTextures()
 	else if (this->gunType == 7)
 	{
 		this->textures["BULLET"] = new Texture();
-		this->textures["BULLET"]->loadFromFile("Textures/bullet.png");
+		this->textures["BULLET"]->loadFromFile("Textures/Capricorn_bullet.png");
 	}
 }
 
@@ -719,35 +728,37 @@ void Game::updateCombatLeftRight()
 void Game::updateGunDrop()
 {
 	//Random Gun
-	if (this->points % 50 == 0 && this->points != 0 && this->gunCorrect == false && this->gunRandomTypeState==true)
+	if (this->points % this->pointsDropGun == 0
+		&& this->points != 0 
+		&& this->gunCorrect == false  
+		&& this->gunRandomTypeState == true)
 	{
 		this->gunDropPercent = rand() % 99 + 1;
-		std::cout << gunDropPercent << std::endl;
-		if (this->gunDropPercent >= 1 && this->gunDropPercent <= 20)
+		if (this->gunDropPercent >= 1 && this->gunDropPercent <= 30)
 		{
 			this->gunDropItem = 1;
 		}
-		else if (this->gunDropPercent > 21 && this->gunDropPercent <= 40)
+		else if (this->gunDropPercent > 30 && this->gunDropPercent <= 55)
 		{
 			this->gunDropItem = 2;
 		}
-		else if (this->gunDropPercent > 41 && this->gunDropPercent <= 60)
+		else if (this->gunDropPercent > 55 && this->gunDropPercent <= 75)
 		{
 			this->gunDropItem = 3;
 		}
-		else if (this->gunDropPercent > 61 && this->gunDropPercent <= 80)
+		else if (this->gunDropPercent > 75 && this->gunDropPercent <= 90)
 		{
 			this->gunDropItem = 4;
 		}
-		else if (this->gunDropPercent > 81 && this->gunDropPercent <= 90)
+		else if (this->gunDropPercent > 90 && this->gunDropPercent <= 96)
 		{
 			this->gunDropItem = 5;
 		}
-		else if (this->gunDropPercent > 90 && this->gunDropPercent <= 96)
+		else if (this->gunDropPercent > 96 && this->gunDropPercent <= 99)
 		{
 			this->gunDropItem = 6;
 		}
-		else if (this->gunDropPercent > 96 && this->gunDropPercent <= 100)
+		else if (this->gunDropPercent > 99 && this->gunDropPercent <= 100)
 		{
 			this->gunDropItem = 7;
 		}
@@ -755,7 +766,7 @@ void Game::updateGunDrop()
 		this->gunRandomState = false;
 		this->gunRandomTypeState = false;
 	}
-	else if (this->points % 50 != 0 && this->gunCorrect == true)
+	else if (this->points%this->pointsDropGun && this->gunCorrect == true)
 	{
 		this->gunCorrect = false;
 	}

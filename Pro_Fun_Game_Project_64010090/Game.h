@@ -22,6 +22,10 @@ private:
 	Sound pistolShotSFX;
 	SoundBuffer alienShot;
 	Sound alienShotSFX;
+	SoundBuffer saxophoneShot;
+	Sound saxophoneShotSFX;
+	SoundBuffer capricornShot;
+	Sound capricornShotSFX;
 	SoundBuffer zombieDeath;
 	Sound zombieDeathSFX;
 	SoundBuffer bourbxnHurt;
@@ -90,6 +94,7 @@ private:
 	float playerAttackCoolDownMax;
 	bool gunDropPlay;
 	bool gunCorrectPlay;
+	int pointsDropGun;
 
 	//Private functions
 	void initWindow();
