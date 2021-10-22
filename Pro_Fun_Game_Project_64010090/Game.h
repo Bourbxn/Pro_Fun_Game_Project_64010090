@@ -96,6 +96,9 @@ private:
 	bool gunCorrectPlay;
 	int pointsDropGun;
 
+	//Vaccine
+	bool infectPlayer;
+
 	//Private functions
 	void initWindow();
 	void initTextures();
@@ -105,6 +108,7 @@ private:
 	void initSystems();
 	void initPlayer();
 	void initGun();
+	void initVaccine();
 	void initEnemies();
 public:
 	Game();
@@ -124,6 +128,7 @@ public:
 	void updateEnemiesPower();
 	void updateCombatUpDown();
 	void updateCombatLeftRight();
+	void updateHP();
 	void updateGunDrop();
 	void updateGunType();
 	void update();

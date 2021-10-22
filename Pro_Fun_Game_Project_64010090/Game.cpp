@@ -113,6 +113,11 @@ void Game::initGun()
 	this->pointsDropGun = 10;
 }
 
+void Game::initVaccine()
+{
+	this->infectPlayer = false;
+}
+
 void Game::initEnemies()
 {
 	this->spawnTimerMaxUpDown = 50.f;
@@ -133,6 +138,7 @@ Game::Game()
 	this->initSystems();
 	this->initPlayer();
 	this->initGun();
+	this->initVaccine();
 	this->initEnemies();
 }
 
@@ -583,7 +589,10 @@ void Game::updateEnemiesUpDown()
 		//Enemy player Collision
 		else if (enemy->getBounds().intersects(this->player->getBounds())) 
 		{
+			//Play SFX
 			bourbxnHurtSFX.play();
+			//Player ger infect
+			this->infectPlayer = true;
 			//std::cout << "Get Damage";
 			this->player->loseHp(20);
 			delete this->enemiesUpDown.at(counter);
@@ -621,7 +630,10 @@ void Game::updateEnemiesLeftRight()
 		//Enemy player Collision
 		else if (enemy->getBounds().intersects(this->player->getBounds()))
 		{
+			//Play SFX
 			bourbxnHurtSFX.play();
+			//Player ger infect
+			this->infectPlayer = true;
 			//std::cout << "Get Damage";
 			this->player->loseHp(20);
 			delete this->enemiesLeftRight.at(counter);
@@ -636,7 +648,7 @@ void Game::updateEnemiesPower()
 	this->time = clock.getElapsedTime().asSeconds();
 	if (this->time > 5)
 	{
-		this->spawnTimerRate += 0.01;
+		this->spawnTimerRate += 0.02;
 		clock.restart();
 	}
 }
@@ -722,6 +734,16 @@ void Game::updateCombatLeftRight()
 				enemy_deleted = true;
 			}
 		}
+	}
+}
+
+void Game::updateHP()
+{
+	this->time = clock.getElapsedTime().asSeconds();
+	if (this->time > 1 && this->infectPlayer==true)
+	{
+		this->player->loseHp(1);
+		clock.restart();
 	}
 }
 
@@ -925,6 +947,7 @@ void Game::update()
 	this->updateEnemiesPower();
 	this->updateCombatUpDown();
 	this->updateCombatLeftRight();
+	this->updateHP();
 	this->updateGunDrop();
 	this->updateGUI();
 	this->updateWorld();
