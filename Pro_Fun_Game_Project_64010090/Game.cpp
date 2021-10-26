@@ -71,7 +71,7 @@ void Game::initGUI()
 	this->playerHpBar.setSize(Vector2f(300.f, 25.f));
 
 	this->playerHPBarBack = this->playerHpBar;
-	this->playerHpBar.setFillColor(Color::Red);
+	this->playerHpBar.setFillColor(Color::Green);
 	this->playerHpBar.setPosition(Vector2f(20.f, 20.f));
 
 	this->playerHPBarBack = this->playerHpBar;
@@ -111,11 +111,14 @@ void Game::initGun()
 	this->gunDropPlay = true;
 	this->deltaTime = 0;
 	this->pointsDropGun = 10;
+	this->enemiesLevel = 1;
 }
 
 void Game::initVaccine()
 {
+	this->vaccine = new Vaccine();
 	this->infectPlayer = false;
+	this->infectedType = 0;
 }
 
 void Game::initEnemies()
@@ -147,6 +150,7 @@ Game::~Game()
 	delete this->window;
 	delete this->player;
 	delete this->gun;
+	delete this->vaccine;
 	
 	//Delete textures
 	for (auto &i : this->textures)
@@ -489,6 +493,18 @@ void Game::updateGUI()
 	//Update Player GUI
 	float hpPercent = static_cast<float>( this->player->getHp())/this->player->getHpMax();
 	this->playerHpBar.setSize(Vector2f(300.f* hpPercent,this->playerHpBar.getSize().y));
+	if (this->infectedType == 2)
+	{
+		this->playerHpBar.setFillColor(Color::Color(191,155,48));
+	}
+	else if (this->infectedType == 0)
+	{
+		this->playerHpBar.setFillColor(Color::Color(89,197,61));
+	}
+	else if(this->infectedType == 1)
+	{
+		this->playerHpBar.setFillColor(Color::Color(238,38,38));
+	}
 }
 
 void Game::updateWorld()
@@ -645,11 +661,37 @@ void Game::updateEnemiesLeftRight()
 
 void Game::updateEnemiesPower()
 {
+	//Update frequency of enemies spawning
 	this->time = clock.getElapsedTime().asSeconds();
 	if (this->time > 5)
 	{
-		this->spawnTimerRate += 0.02;
+		this->spawnTimerRate += 0.02f;
 		clock.restart();
+	}
+	//Update enemies level
+	if (this->spawnTimerRate <= 0.5f) 
+	{
+		this->enemiesLevel = 1;
+	}
+	else if (this->spawnTimerRate > 0.5f && this->spawnTimerRate <= 1.0f )
+	{
+		this->enemiesLevel = 2;
+	}
+	else if (this->spawnTimerRate > 1.0f && this->spawnTimerRate <= 2.0f)
+	{
+		this->enemiesLevel = 3;
+	}
+	else if (this->spawnTimerRate > 2.0f && this->spawnTimerRate <= 5.0f)
+	{
+		this->enemiesLevel = 4;
+	}
+	else if (this->spawnTimerRate > 5.0f && this->spawnTimerRate <= 10.0f)
+	{
+		this->enemiesLevel = 5;
+	}
+	else if (this->spawnTimerRate > 10.0f)
+	{
+		this->enemiesLevel = 6;
 	}
 }
 
@@ -672,15 +714,15 @@ void Game::updateCombatUpDown()
 				}
 				else if (this->gunType == 5)
 				{
-					this->points += 2;
+					this->points += 1;
 				}
 				else if (this->gunType == 6)
 				{
-					this->points += 2;
+					this->points += 1;
 				}
 				else if (this->gunType == 7)
 				{
-					this->points += 10;
+					this->points += 1;
 				}
 
 				delete this->enemiesUpDown[i];
@@ -714,15 +756,15 @@ void Game::updateCombatLeftRight()
 				}
 				else if (this->gunType == 5)
 				{
-					this->points += 2;
+					this->points += 1;
 				}
 				else if (this->gunType == 6)
 				{
-					this->points += 2;
+					this->points += 1;
 				}
 				else if (this->gunType == 7)
 				{
-					this->points += 10;
+					this->points += 1;
 				}
 
 				delete this->enemiesLeftRight[i];
@@ -739,16 +781,18 @@ void Game::updateCombatLeftRight()
 
 void Game::updateHP()
 {
-	this->time = clock.getElapsedTime().asSeconds();
-	if (this->time > 1 && this->infectPlayer==true)
+	this->time2 = clock2.getElapsedTime().asSeconds();
+	if (this->time2 > 1 && this->infectPlayer==true)
 	{
 		this->player->loseHp(1);
-		clock.restart();
+		clock2.restart();
 	}
 }
 
 void Game::updateGunDrop()
 {
+	std::cout << this->spawnTimerRate << std::endl;
+	std::cout << this->enemiesLevel << std::endl;
 	//Random Gun
 	if (this->points % this->pointsDropGun == 0
 		&& this->points != 0 
@@ -756,34 +800,108 @@ void Game::updateGunDrop()
 		&& this->gunRandomTypeState == true)
 	{
 		this->gunDropPercent = rand() % 99 + 1;
-		if (this->gunDropPercent >= 1 && this->gunDropPercent <= 30)
+		//Enemies level 1
+		if (this->enemiesLevel == 1)
 		{
-			this->gunDropItem = 1;
+			gunDropItem = 1;
 		}
-		else if (this->gunDropPercent > 30 && this->gunDropPercent <= 55)
+		//Enemies level 2
+		else if (this->enemiesLevel == 2)
 		{
-			this->gunDropItem = 2;
+			if (this->gunDropPercent >= 1 && this->gunDropPercent <= 5)
+			{
+				this->gunDropItem = 1;
+			}
+			else if (this->gunDropPercent > 5 && this->gunDropPercent <= 50)
+			{
+				this->gunDropItem = 2;
+			}
+			else if (this->gunDropPercent > 50 && this->gunDropPercent <= 95)
+			{
+				this->gunDropItem = 3;
+			}
+			else if (this->gunDropPercent > 95 && this->gunDropPercent <= 100)
+			{
+				this->gunDropItem = 4;
+			}
 		}
-		else if (this->gunDropPercent > 55 && this->gunDropPercent <= 75)
+		//Enemies level 3
+		else if (this->enemiesLevel == 3)
 		{
-			this->gunDropItem = 3;
+			if (this->gunDropPercent >= 1 && this->gunDropPercent <= 5)
+			{
+				this->gunDropItem = 2;
+			}
+			else if (this->gunDropPercent > 5 && this->gunDropPercent <= 50)
+			{
+				this->gunDropItem = 3;
+			}
+			else if (this->gunDropPercent > 50 && this->gunDropPercent <= 95)
+			{
+				this->gunDropItem = 4;
+			}
+			else if (this->gunDropPercent > 95 && this->gunDropPercent <= 100)
+			{
+				this->gunDropItem = 5;
+			}
 		}
-		else if (this->gunDropPercent > 75 && this->gunDropPercent <= 90)
+		//Enemies level 4
+		else if (this->enemiesLevel == 4)
 		{
-			this->gunDropItem = 4;
+			if (this->gunDropPercent >= 1 && this->gunDropPercent <= 5)
+			{
+				this->gunDropItem = 3;
+			}
+			else if (this->gunDropPercent > 5 && this->gunDropPercent <= 50)
+			{
+				this->gunDropItem = 4;
+			}
+			else if (this->gunDropPercent > 50 && this->gunDropPercent <= 95)
+			{
+				this->gunDropItem = 5;
+			}
+			else if (this->gunDropPercent > 95 && this->gunDropPercent <= 100)
+			{
+				this->gunDropItem = 6;
+			}
 		}
-		else if (this->gunDropPercent > 90 && this->gunDropPercent <= 96)
+		//Enemies level 4
+		else if (this->enemiesLevel == 5)
 		{
-			this->gunDropItem = 5;
+			if (this->gunDropPercent >= 1 && this->gunDropPercent <= 5)
+			{
+				this->gunDropItem = 4;
+			}
+			else if (this->gunDropPercent > 5 && this->gunDropPercent <= 50)
+			{
+				this->gunDropItem = 5;
+			}
+			else if (this->gunDropPercent > 50 && this->gunDropPercent <= 95)
+			{
+				this->gunDropItem = 6;
+			}
+			else if (this->gunDropPercent > 95 && this->gunDropPercent <= 100)
+			{
+				this->gunDropItem = 7;
+			}
 		}
-		else if (this->gunDropPercent > 96 && this->gunDropPercent <= 99)
+		//Enemies level 4
+		else if (this->enemiesLevel == 6)
 		{
-			this->gunDropItem = 6;
+			if (this->gunDropPercent >= 1 && this->gunDropPercent <= 40)
+			{
+				this->gunDropItem = 5;
+			}
+			else if (this->gunDropPercent > 40 && this->gunDropPercent <= 80)
+			{
+				this->gunDropItem = 6;
+			}
+			else if (this->gunDropPercent > 80 && this->gunDropPercent <= 100)
+			{
+				this->gunDropItem = 7;
+			}
 		}
-		else if (this->gunDropPercent > 99 && this->gunDropPercent <= 100)
-		{
-			this->gunDropItem = 7;
-		}
+		
 		this->gunDropState = true;
 		this->gunRandomState = false;
 		this->gunRandomTypeState = false;
@@ -928,6 +1046,23 @@ void Game::updateGunType()
 	else if (this->gunType == 7)
 	{
 		this->playerAttackCoolDownMax = 5.f;
+		this->infectPlayer = false;
+	}
+}
+
+void Game::updateVaccineType()
+{
+	if (this->gunType == 7 && this->infectPlayer == false)
+	{
+		this->infectedType = 2;
+	}
+	else if (this->infectPlayer == false)
+	{
+		this->infectedType = 0;
+	}
+	else if (this->infectPlayer == true)
+	{
+		this->infectedType = 1;
 	}
 }
 	
@@ -938,7 +1073,9 @@ void Game::update()
 	this->player->updateAttackStatus(this->playerAttackCoolDownMax);
 	this->player->update();
 	this->gun->updateSpriteTextures(this->gunType);
+	this->vaccine->updateSpriteTextures(this->infectedType);
 	this->updateGunType();
+	this->updateVaccineType();
 	this->gun->update();
 	this->updateTextures();
 	this->updateBullets();
@@ -948,6 +1085,7 @@ void Game::update()
 	this->updateCombatUpDown();
 	this->updateCombatLeftRight();
 	this->updateHP();
+	this->updateEnemiesPower();
 	this->updateGunDrop();
 	this->updateGUI();
 	this->updateWorld();
@@ -985,6 +1123,7 @@ void Game::render()
 	//Draw all the stuff
 	this->player->render(*this->window);
 	this->gun->render(*this->window);
+	this->vaccine->render(*this->window);
 	this->renderGunDrop();
 	for (auto *bullet : this->bullets)
 	{

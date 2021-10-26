@@ -3,6 +3,7 @@
 #include "Enemy.h"
 #include "Player.h"
 #include "Gun.h"
+#include "Vaccine.h"
 #include "sstream"
 
 
@@ -59,9 +60,15 @@ private:
 	Texture textureGunDrop;
 	Sprite spriteGunDrop;
 
+
+	//Vaccine
+	Vaccine* vaccine;
+
 	//Time
 	Clock clock;
 	float time;
+	Clock clock2;
+	float time2;
 	int deltaTime;
 
 
@@ -95,9 +102,11 @@ private:
 	bool gunDropPlay;
 	bool gunCorrectPlay;
 	int pointsDropGun;
+	int enemiesLevel;
 
 	//Vaccine
 	bool infectPlayer;
+	int infectedType;
 
 	//Private functions
 	void initWindow();
@@ -131,6 +140,7 @@ public:
 	void updateHP();
 	void updateGunDrop();
 	void updateGunType();
+	void updateVaccineType();
 	void update();
 
 	//Render
