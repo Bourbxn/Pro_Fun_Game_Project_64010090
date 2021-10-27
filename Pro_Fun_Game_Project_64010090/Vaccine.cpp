@@ -22,7 +22,7 @@ void Vaccine::initSprite()
 	this->sprite.scale(1.f, 1.f);
 
 	//Set Position the sprite
-	this->sprite.setPosition(Vector2f(20.f,45.f));
+	this->sprite.setPosition(Vector2f(18.f,45.f));
 }
 
 Vaccine::Vaccine()

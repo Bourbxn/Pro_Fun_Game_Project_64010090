@@ -63,6 +63,8 @@ private:
 
 	//Vaccine
 	Vaccine* vaccine;
+	Texture textureVaccineDrop;
+	Sprite spriteVaccineDrop;
 
 	//Time
 	Clock clock;
@@ -70,6 +72,7 @@ private:
 	Clock clock2;
 	float time2;
 	int deltaTime;
+	int deltaTime2;
 
 
 	//Enemies
@@ -105,8 +108,16 @@ private:
 	int enemiesLevel;
 
 	//Vaccine
+	int vaccineType;
+	bool vaccineDropState;
 	bool infectPlayer;
 	int infectedType;
+	int vaccinePercentDrop;
+	bool vaccineRandomRate;
+	int vaccineTypeDrop;
+	bool vaccineRandomPos;
+	int vaccineDropPos_x;
+	int vaccineDropPos_y;
 
 	//Private functions
 	void initWindow();
@@ -124,6 +135,7 @@ public:
 	virtual ~Game();
 
 	//Functions
+	void updateVaccineDrop();
 
 	//Update
 	void updatePollEvents();
@@ -140,11 +152,13 @@ public:
 	void updateHP();
 	void updateGunDrop();
 	void updateGunType();
-	void updateVaccineType();
+	void updateInfectedType();
+	void updateVaccineCollected();
 	void update();
 
 	//Render
 	void renderGunDrop();
+	void renderVaccineDrop();
 	void renderGUI();
 	void renderWorld();
 	void render();

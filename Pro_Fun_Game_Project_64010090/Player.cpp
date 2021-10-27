@@ -81,6 +81,13 @@ void Player::loseHp(const int value)
 		this->hp = 0;
 }
 
+void Player::regainHP(const int value)
+{
+	this->hp += value;
+	if (this->hp > 100)
+		this->hp = 100;
+}
+
 
 void Player::move(const float dir_X, const float dir_Y)
 {

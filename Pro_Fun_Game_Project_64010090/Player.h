@@ -43,6 +43,7 @@ public:
 	//Modifiers
 	void setHp(const int hp);
 	void loseHp(const int value);
+	void regainHP(const int value);
 
 	//Functions
 	void move(const float dir_X, const float dir_Y);

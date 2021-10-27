@@ -68,11 +68,15 @@ void Game::initGUI()
 	this->pointText.setPosition(Vector2f(this->window->getSize().x - 200, 10.f));
 
 	//Init GUI
+
+	//HP Bar
 	this->playerHpBar.setSize(Vector2f(300.f, 25.f));
 
 	this->playerHPBarBack = this->playerHpBar;
 	this->playerHpBar.setFillColor(Color::Green);
 	this->playerHpBar.setPosition(Vector2f(20.f, 20.f));
+	//this->playerHpBar.setOutlineThickness(3.f);
+	//this->playerHpBar.setOutlineColor(Color::Black);
 
 	this->playerHPBarBack = this->playerHpBar;
 	this->playerHPBarBack.setFillColor(Color(25, 25, 25, 200));
@@ -117,8 +121,11 @@ void Game::initGun()
 void Game::initVaccine()
 {
 	this->vaccine = new Vaccine();
+	this->vaccineDropState = false;
 	this->infectPlayer = false;
 	this->infectedType = 0;
+	this->vaccineRandomRate = false;
+	this->vaccineRandomPos = false;
 }
 
 void Game::initEnemies()
@@ -175,6 +182,86 @@ Game::~Game()
 		delete i;
 	}
 
+}
+
+void Game::updateVaccineDrop()
+{
+	std::cout << "You have been kill enemy" << std::endl;
+	//Random Rate / Pos
+	if (this->vaccineRandomRate == true && this->vaccineDropState==false)
+	{
+		this->vaccinePercentDrop = rand() % 99 + 1;
+		this->vaccineDropPos_x = rand() % 1201 + 300;
+		this->vaccineDropPos_y = rand() % 401 + 300;
+		this->vaccineDropState = true;
+	}
+	this->vaccineRandomRate = false;
+
+	std::cout << this->vaccinePercentDrop << std::endl;
+	std::cout << this->vaccineDropPos_x << std::endl;
+	std::cout << this->vaccineDropPos_y << std::endl;
+
+
+	//Random Drop Rate
+	if (this->vaccinePercentDrop >= 1 && this->vaccinePercentDrop <= 10)
+	{
+		this->vaccineTypeDrop = 1;
+	}
+	else if (this->vaccinePercentDrop > 5 && this->vaccinePercentDrop <= 50)
+	{
+		this->vaccineTypeDrop = 0;
+	}
+	else if (this->vaccinePercentDrop > 50 && this->vaccinePercentDrop <= 53)
+	{
+		this->vaccineTypeDrop = 2;
+	}
+	else if (this->vaccinePercentDrop > 53 && this->vaccinePercentDrop <= 97)
+	{
+		this->vaccineTypeDrop = 0;
+	}
+	else if (this->vaccinePercentDrop > 97 && this->vaccinePercentDrop <= 100)
+	{
+		this->vaccineTypeDrop = 3;
+	}
+
+	//Drop Vaccine
+	if (this->vaccineTypeDrop == 0)
+	{
+		this->vaccineRandomRate = true;
+		this->vaccineDropState = false;
+	}
+	else if (this->vaccineTypeDrop == 1)
+	{
+		if (!this->textureVaccineDrop.loadFromFile("Textures/vaccine_01_Drop.png"))
+		{
+			std::cout << "ERROR::VACCINE::INITTEXTURE::Could not load textures file." << "\n";
+		}
+		this->spriteVaccineDrop.setTexture(this->textureVaccineDrop);
+		this->spriteVaccineDrop.setScale(1.f, 1.f);
+		this->spriteVaccineDrop.setPosition(this->vaccineDropPos_x, this->vaccineDropPos_y);
+	}
+	else if (this->vaccineTypeDrop == 2)
+	{
+		if (!this->textureVaccineDrop.loadFromFile("Textures/vaccine_02_Drop.png"))
+		{
+			std::cout << "ERROR::VACCINE::INITTEXTURE::Could not load textures file." << "\n";
+		}
+		this->spriteVaccineDrop.setTexture(this->textureVaccineDrop);
+		this->spriteVaccineDrop.setScale(1.f, 1.f);
+		this->spriteVaccineDrop.setPosition(this->vaccineDropPos_x, this->vaccineDropPos_y);
+	}
+	else if (this->vaccineTypeDrop == 3)
+	{
+		if (!this->textureVaccineDrop.loadFromFile("Textures/vaccine_03_Drop.png"))
+		{
+			std::cout << "ERROR::VACCINE::INITTEXTURE::Could not load textures file." << "\n";
+		}
+		this->spriteVaccineDrop.setTexture(this->textureVaccineDrop);
+		this->spriteVaccineDrop.setScale(1.f, 1.f);
+		this->spriteVaccineDrop.setPosition(this->vaccineDropPos_x, this->vaccineDropPos_y);
+	}
+
+	
 }
 
 //Functions
@@ -669,27 +756,27 @@ void Game::updateEnemiesPower()
 		clock.restart();
 	}
 	//Update enemies level
-	if (this->spawnTimerRate <= 0.5f) 
+	if (this->spawnTimerRate <= 0.2f) 
 	{
 		this->enemiesLevel = 1;
 	}
-	else if (this->spawnTimerRate > 0.5f && this->spawnTimerRate <= 1.0f )
+	else if (this->spawnTimerRate > 0.2f && this->spawnTimerRate <= 0.4f )
 	{
 		this->enemiesLevel = 2;
 	}
-	else if (this->spawnTimerRate > 1.0f && this->spawnTimerRate <= 2.0f)
+	else if (this->spawnTimerRate > 0.4f && this->spawnTimerRate <= 0.6f)
 	{
 		this->enemiesLevel = 3;
 	}
-	else if (this->spawnTimerRate > 2.0f && this->spawnTimerRate <= 5.0f)
+	else if (this->spawnTimerRate > 0.6f && this->spawnTimerRate <= 0.8f)
 	{
 		this->enemiesLevel = 4;
 	}
-	else if (this->spawnTimerRate > 5.0f && this->spawnTimerRate <= 10.0f)
+	else if (this->spawnTimerRate > 0.8f && this->spawnTimerRate <= 1.f)
 	{
 		this->enemiesLevel = 5;
 	}
-	else if (this->spawnTimerRate > 10.0f)
+	else if (this->spawnTimerRate > 1.f)
 	{
 		this->enemiesLevel = 6;
 	}
@@ -706,7 +793,9 @@ void Game::updateCombatUpDown()
 			if (this->enemiesUpDown[i]->getBounds().intersects(this->bullets[k]->getBounds()))
 			{
 				this->zombieDeathSFX.play();
-
+				this->vaccineRandomPos = true;
+				this->vaccineRandomRate = true;
+				this->updateVaccineDrop();
 				//Points in each gun type
 				if (this->gunType == 0 || this->gunType == 1 || this->gunType == 2 || this->gunType == 3 || this->gunType == 4)
 				{
@@ -748,6 +837,9 @@ void Game::updateCombatLeftRight()
 			if (this->enemiesLeftRight[i]->getBounds().intersects(this->bullets[k]->getBounds()))
 			{
 				this->zombieDeathSFX.play();
+				this->vaccineRandomPos = true;
+				this->vaccineRandomRate = true;
+				this->updateVaccineDrop();
 
 				//Points in each gun type
 				if (this->gunType == 0 || this->gunType == 1 || this->gunType == 2 || this->gunType == 3 || this->gunType == 4)
@@ -1050,7 +1142,7 @@ void Game::updateGunType()
 	}
 }
 
-void Game::updateVaccineType()
+void Game::updateInfectedType()
 {
 	if (this->gunType == 7 && this->infectPlayer == false)
 	{
@@ -1065,6 +1157,49 @@ void Game::updateVaccineType()
 		this->infectedType = 1;
 	}
 }
+
+void Game::updateVaccineCollected()
+{
+	//Collect Vaccine
+	if (this->spriteVaccineDrop.getGlobalBounds().intersects(this->player->getBounds()) && this->vaccineDropState == true)
+	{
+		std::cout << "player intersect vaccine" << std::endl;
+		this->vaccineType = this->vaccineTypeDrop;
+		this->vaccineDropState = false;
+		this->vaccineRandomRate = true;
+		this->vaccineRandomPos = true;
+		this->vaccineDropState = false;
+		this->deltaTime2 = 0;
+		//Vaccine Active
+		if (this->vaccineType == 1)
+		{
+			this->player->regainHP(20);
+		}
+		else if (this->vaccineType == 2)
+		{
+			this->infectPlayer = false;
+		}
+		else if (this->vaccineType == 3)
+		{
+			this->player->regainHP(50);
+			this->infectPlayer = false;
+		}
+	}
+	else if (!this->spriteVaccineDrop.getGlobalBounds().intersects(this->player->getBounds()) && this->vaccineDropState == true)
+	{
+		this->deltaTime2 += 1;
+		if (this->deltaTime2 == 600)
+		{
+			this->gunRandomTypeState = true;
+			this->vaccineDropState = false;
+			this->vaccineRandomRate = true;
+			this->vaccineRandomPos = true;
+			this->vaccineDropState = false;
+			this->deltaTime2 = 0;
+		}
+		//std::cout << deltaTime << std::endl;
+	}
+}
 	
 void Game::update()
 {
@@ -1075,7 +1210,7 @@ void Game::update()
 	this->gun->updateSpriteTextures(this->gunType);
 	this->vaccine->updateSpriteTextures(this->infectedType);
 	this->updateGunType();
-	this->updateVaccineType();
+	this->updateInfectedType();
 	this->gun->update();
 	this->updateTextures();
 	this->updateBullets();
@@ -1087,6 +1222,7 @@ void Game::update()
 	this->updateHP();
 	this->updateEnemiesPower();
 	this->updateGunDrop();
+	this->updateVaccineCollected();
 	this->updateGUI();
 	this->updateWorld();
 }
@@ -1099,12 +1235,19 @@ void Game::renderGunDrop()
 	}
 }
 
+void Game::renderVaccineDrop()
+{
+	if (this->vaccineDropState == true)
+	{
+		this->window->draw(this->spriteVaccineDrop);
+	}
+}
+
 void Game::renderGUI()
 {
 	this->window->draw(this->pointText);
 	this->window->draw(this->playerHPBarBack);
 	this->window->draw(this->playerHpBar);
-
 }
 
 void Game::renderWorld()
@@ -1122,9 +1265,9 @@ void Game::render()
 	
 	//Draw all the stuff
 	this->player->render(*this->window);
-	this->gun->render(*this->window);
-	this->vaccine->render(*this->window);
 	this->renderGunDrop();
+	this->renderVaccineDrop();
+	this->gun->render(*this->window);
 	for (auto *bullet : this->bullets)
 	{
 		bullet->render(this->window);
@@ -1141,6 +1284,7 @@ void Game::render()
 	}
 
 	this->renderGUI();
+	this->vaccine->render(*this->window);
 
 	this->window->display();
 }
