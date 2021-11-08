@@ -2,7 +2,7 @@
 
 void Game::initWindow()
 {
-	this->window = new RenderWindow(VideoMode(1920,1080),"Freaking Virus",Style::Close | Style::Fullscreen);
+	this->window = new RenderWindow(VideoMode(1920,1080),"Freaking Virus",Style::Close | Style::Default);
 	this->window->setFramerateLimit(60);
 	this->window->setVerticalSyncEnabled(false);
 }
@@ -67,8 +67,6 @@ void Game::initGUI()
 	this->pointText.setString("test");
 	this->pointText.setPosition(Vector2f(this->window->getSize().x - 200, 10.f));
 
-	//Init GUI
-
 	//HP Bar
 	this->playerHpBar.setSize(Vector2f(300.f, 25.f));
 
@@ -80,6 +78,17 @@ void Game::initGUI()
 
 	this->playerHPBarBack = this->playerHpBar;
 	this->playerHPBarBack.setFillColor(Color(25, 25, 25, 200));
+
+	//Game Over
+	this->gameOverText.setFont(this->font);
+	this->gameOverText.setCharacterSize(100);
+	this->gameOverText.setFillColor(Color::White);
+	this->gameOverText.setOutlineColor(Color::Black);
+	this->gameOverText.setOutlineThickness(3);
+	this->gameOverText.setString("Game Over");
+	this->gameOverText.setPosition(
+		this->window->getSize().x / 2.f - this->gameOverText.getGlobalBounds().width / 2.f,
+		this->window->getSize().y / 2.f - this->gameOverText.getGlobalBounds().height / 2.f);
 }
 
 void Game::initWorld()
@@ -114,7 +123,7 @@ void Game::initGun()
 	this->gunCorrectPlay = false;
 	this->gunDropPlay = true;
 	this->deltaTime = 0;
-	this->pointsDropGun = 10;
+	this->pointsDropGun = 20;
 	this->enemiesLevel = 1;
 }
 
@@ -270,6 +279,7 @@ void Game::run()
 	while (this->window->isOpen())
 	{
 		this->update();
+	
 		this->render();
 	}
 
@@ -689,6 +699,12 @@ void Game::updateEnemiesUpDown()
 			delete this->enemiesUpDown.at(counter);
 			this->enemiesUpDown.erase(this->enemiesUpDown.begin() + counter);
 		}
+		if (enemy->getBounds().top < -150)
+		{
+			//Delete enemy
+			delete this->enemiesUpDown.at(counter);
+			this->enemiesUpDown.erase(this->enemiesUpDown.begin() + counter);
+		}
 		//Enemy player Collision
 		else if (enemy->getBounds().intersects(this->player->getBounds())) 
 		{
@@ -724,7 +740,13 @@ void Game::updateEnemiesLeftRight()
 
 
 		//Bullet culling (top of screen)
-		if (enemy->getBounds().top > this->window->getSize().y)
+		if (enemy->getBounds().left > this->window->getSize().x)
+		{
+			//Delete enemy
+			delete this->enemiesLeftRight.at(counter);
+			this->enemiesLeftRight.erase(this->enemiesLeftRight.begin() + counter);
+		}
+		if (enemy->getBounds().left < 0)
 		{
 			//Delete enemy
 			delete this->enemiesLeftRight.at(counter);
@@ -752,7 +774,7 @@ void Game::updateEnemiesPower()
 	this->time = clock.getElapsedTime().asSeconds();
 	if (this->time > 5)
 	{
-		this->spawnTimerRate += 0.02f;
+		this->spawnTimerRate += 0.01f;
 		clock.restart();
 	}
 	//Update enemies level
@@ -876,7 +898,7 @@ void Game::updateHP()
 	this->time2 = clock2.getElapsedTime().asSeconds();
 	if (this->time2 > 1 && this->infectPlayer==true)
 	{
-		this->player->loseHp(1);
+		this->player->loseHp(this->enemiesLevel*4);
 		clock2.restart();
 	}
 }
@@ -1285,6 +1307,8 @@ void Game::render()
 
 	this->renderGUI();
 	this->vaccine->render(*this->window);
+
+	//Game Over Screen
 
 	this->window->display();
 }

@@ -39,6 +39,7 @@ private:
 	//GUI
 	Font font;
 	Text pointText;
+	Text gameOverText;
 
 	//World
 	Texture worldBackgroundTex;
