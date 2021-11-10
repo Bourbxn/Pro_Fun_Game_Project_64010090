@@ -36,10 +36,10 @@ private:
 	void initTexture();
 	void initSprite();
 	void initVariables();
-	void initDirectionVar(float dirX,float dirY);
+	void initDirectionVar(float dirX,float dirY, float speedDependsPowerMinus, float speedDependsPowerPlus);
 
 public:
-	Enemy(float pos_x, float pos_y);
+	Enemy(float pos_x, float pos_y, float speedDependsPowerMinus, float speedDependsPowerPlus);
 	virtual ~Enemy();
 
 	//Accessor

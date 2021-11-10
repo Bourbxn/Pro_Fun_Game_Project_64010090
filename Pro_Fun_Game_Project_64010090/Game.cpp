@@ -1,10 +1,20 @@
 #include "Game.h"
 
+void Game::initGameState()
+{
+	this->GameState = 1;
+}
+
 void Game::initWindow()
 {
 	this->window = new RenderWindow(VideoMode(1920,1080),"Freaking Virus",Style::Close | Style::Default);
 	this->window->setFramerateLimit(60);
 	this->window->setVerticalSyncEnabled(false);
+}
+
+void Game::initMenu()
+{
+	this->menu = new Menu();
 }
 
 void Game::initTextures()
@@ -81,14 +91,28 @@ void Game::initGUI()
 
 	//Game Over
 	this->gameOverText.setFont(this->font);
-	this->gameOverText.setCharacterSize(100);
+	this->gameOverText.setCharacterSize(150);
 	this->gameOverText.setFillColor(Color::White);
 	this->gameOverText.setOutlineColor(Color::Black);
-	this->gameOverText.setOutlineThickness(3);
+	this->gameOverText.setOutlineThickness(10);
 	this->gameOverText.setString("Game Over");
 	this->gameOverText.setPosition(
 		this->window->getSize().x / 2.f - this->gameOverText.getGlobalBounds().width / 2.f,
 		this->window->getSize().y / 2.f - this->gameOverText.getGlobalBounds().height / 2.f);
+
+	//Game Over Explain
+	this->gameOverExplainPosY = 940.f;
+	this->gameOverExFontSize = 50;
+	this->gameOverExThickness = 5;
+	this->gameOverExStartPos = 180.f;
+
+	this->gameOverExplain1.setFont(this->font);
+	this->gameOverExplain1.setCharacterSize(this->gameOverExFontSize);
+	this->gameOverExplain1.setFillColor(Color::Color(169,169,169));
+	this->gameOverExplain1.setOutlineColor(Color::Black);
+	this->gameOverExplain1.setOutlineThickness(this->gameOverExThickness);
+	this->gameOverExplain1.setString("press  Enter  for  play  again  or  press  ESC  for  exit  to  main  menu");
+	this->gameOverExplain1.setPosition(this->gameOverExStartPos,this->gameOverExplainPosY);
 }
 
 void Game::initWorld()
@@ -144,12 +168,16 @@ void Game::initEnemies()
 	this->spawnTimerMaxLeftRight = 50.f;
 	this->spawnTimerLeftRight = this->spawnTimerMaxLeftRight;
 	this->spawnTimerRate = 0.1f;
+	this->enemySpeedDirPlus = 1.f;
+	this->enemySpeedDirMinus = -1.f;
 }
 
 //con/des
 Game::Game()
 {
+	this->initGameState();
 	this->initWindow();
+	this->initMenu();
 	this->initTextures();
 	this->initAudio();
 	this->initGUI();
@@ -278,9 +306,40 @@ void Game::run()
 {
 	while (this->window->isOpen())
 	{
-		this->update();
-	
-		this->render();
+		std::cout << this->GameState << std::endl;
+		this->updateGameState();
+
+		//Menu
+		if (this->GameState == 1)
+		{
+			this->updateMenu();
+			this->renderMenu();
+			this->updatePollEvents();
+		}
+		
+		//Game Play
+		else if (this->GameState == 2)
+		{
+			this->updatePollEvents();
+			this->update();
+			this->render();
+		}
+		//Game Over
+		else if (this->GameState == 3)
+		{
+			this->updateGameOver();
+		}
+		//Ranking
+		else if (this->GameState == 4)
+		{
+			//...
+		}
+		//Exit
+		else if (this->GameState == 5)
+		{
+			this->window->close();
+		}
+		
 	}
 
 }
@@ -294,6 +353,22 @@ void Game::updatePollEvents()
 			this->window->close();
 		if (ev.Event::KeyPressed && ev.Event::key.code == Keyboard::Escape)
 			this->window->close();
+	}
+}
+
+void Game::updateGameState()
+{
+	//Update Game State from Menu
+
+	//Update Game Over
+	if (this->player->getHp() <= 0)
+	{
+		this->GameState = 3;
+	}
+	if (this->GameState == 3)
+	{
+		this->player->setHp(100);
+		this->infectPlayer = false;
 	}
 }
 
@@ -680,8 +755,15 @@ void Game::updateEnemiesUpDown()
 	this->spawnTimerUpDown += this->spawnTimerRate;
 	if (this->spawnTimerUpDown >= this->spawnTimerMaxUpDown)
 	{
-		this->enemiesUpDown.push_back(new Enemy(rand() % this->window->getSize().x-20.f, -100.f));							//Down
-		this->enemiesUpDown.push_back(new Enemy(rand() % this->window->getSize().x - 20.f,this->window->getSize().y));		//Up
+		this->enemiesUpDown.push_back(new Enemy(
+			rand() % this->window->getSize().x-20.f, -100.f,
+			this->enemySpeedDirMinus,
+			this->enemySpeedDirPlus));							//Down
+		this->enemiesUpDown.push_back(new Enemy(
+			rand() % this->window->getSize().x - 20.f,
+			this->window->getSize().y,
+			this->enemySpeedDirMinus,
+			this->enemySpeedDirPlus));							//Up
 		this->spawnTimerUpDown = 0.f;
 	}
 
@@ -727,8 +809,16 @@ void Game::updateEnemiesLeftRight()
 	this->spawnTimerLeftRight += this->spawnTimerRate;
 	if (this->spawnTimerLeftRight >= this->spawnTimerMaxLeftRight)
 	{
-		this->enemiesLeftRight.push_back(new Enemy(0.f, rand() % this->window->getSize().y-20));									//Right
-		this->enemiesLeftRight.push_back(new Enemy(this->window->getSize().x, rand() % this->window->getSize().y-20));			//Left
+		this->enemiesLeftRight.push_back(new Enemy(
+			0.f, 
+			rand() % this->window->getSize().y-20,
+			this->enemySpeedDirMinus,
+			this->enemySpeedDirPlus));									//Right
+		this->enemiesLeftRight.push_back(new Enemy(
+			this->window->getSize().x, 
+			rand() % this->window->getSize().y-20,
+			this->enemySpeedDirMinus,
+			this->enemySpeedDirPlus));			//Left
 		this->spawnTimerLeftRight = 0.f;
 	}
 
@@ -770,19 +860,34 @@ void Game::updateEnemiesLeftRight()
 
 void Game::updateEnemiesPower()
 {
+
 	//Update frequency of enemies spawning
 	this->time = clock.getElapsedTime().asSeconds();
 	if (this->time > 5)
 	{
 		this->spawnTimerRate += 0.01f;
+		if (this->spawnTimerRate > 1.2f)
+			this->spawnTimerRate = 1.2f;
+		if (this->enemiesLevel == 6)
+		{
+			this->enemySpeedDirMinus -= 0.1f;
+			this->enemySpeedDirPlus += 0.1f;
+		}
 		clock.restart();
 	}
+
+	//Set enemy speed
+	if (this->enemySpeedDirMinus > 5)
+		this->enemySpeedDirMinus = 5;
+	if (this->enemySpeedDirPlus > 5)
+		this->enemySpeedDirPlus = 5;
+
 	//Update enemies level
-	if (this->spawnTimerRate <= 0.2f) 
+	if (this->spawnTimerRate <= 0.2f)
 	{
 		this->enemiesLevel = 1;
 	}
-	else if (this->spawnTimerRate > 0.2f && this->spawnTimerRate <= 0.4f )
+	else if (this->spawnTimerRate > 0.2f && this->spawnTimerRate <= 0.4f)
 	{
 		this->enemiesLevel = 2;
 	}
@@ -1222,10 +1327,27 @@ void Game::updateVaccineCollected()
 		//std::cout << deltaTime << std::endl;
 	}
 }
+
+void Game::updateSelectedMenu()
+{
+	this->GameState = this->menu->getGameState();
+}
+
+void Game::updateSelectedGameOver()
+{
+	//Update Input Selected Menu
+	if (Keyboard::isKeyPressed(Keyboard::Enter))
+	{
+		this->GameState = 2;
+	}
+	if (Keyboard::isKeyPressed(Keyboard::Escape))
+	{
+		this->GameState = 1;
+	}
+}
 	
 void Game::update()
 {
-	this->updatePollEvents();
 	this->updateInput();
 	this->player->updateAttackStatus(this->playerAttackCoolDownMax);
 	this->player->update();
@@ -1247,6 +1369,17 @@ void Game::update()
 	this->updateVaccineCollected();
 	this->updateGUI();
 	this->updateWorld();
+}
+
+void Game::updateMenu()
+{
+	this->menu->updateInput();
+	this->updateSelectedMenu();
+}
+
+void Game::updateGameOver()
+{
+	this->updateSelectedGameOver();
 }
 
 void Game::renderGunDrop()
@@ -1281,7 +1414,6 @@ void Game::render()
 {
 	this->window->clear(); 
 
-	
 	//Draw world
 	this->renderWorld();
 	
@@ -1310,5 +1442,21 @@ void Game::render()
 
 	//Game Over Screen
 
+	if (this->player->getHp() <= 0)
+	{
+		this->window->draw(this->gameOverText);
+		this->window->draw(this->gameOverExplain1);
+		this->window->draw(this->gameOverExplain2);
+		this->window->draw(this->gameOverExplain3);
+		this->window->draw(this->gameOverExplain4);
+		this->window->draw(this->gameOverExplain5);
+	}
+	this->window->display();
+}
+
+void Game::renderMenu()
+{
+	this->window->clear();
+	this->menu->render(*this->window);
 	this->window->display();
 }

@@ -5,6 +5,7 @@
 #include "Gun.h"
 #include "Vaccine.h"
 #include "sstream"
+#include "Menu.h"
 
 
 
@@ -13,6 +14,9 @@ class Game
 private:
 	//Window
 	RenderWindow* window;
+
+	//Menu
+	Menu* menu;
 
 	//Resource
 	std::map<std::string, Texture*>textures;
@@ -40,6 +44,11 @@ private:
 	Font font;
 	Text pointText;
 	Text gameOverText;
+	Text gameOverExplain1;	//Press
+	Text gameOverExplain2;  //"Enter"
+	Text gameOverExplain3;	//for play again
+	Text gameOverExplain4;	//"ESC"
+	Text gameOverExplain5;	//for exit main menu
 
 	//World
 	Texture worldBackgroundTex;
@@ -75,6 +84,8 @@ private:
 	int deltaTime;
 	int deltaTime2;
 
+	//Game State
+	int GameState;
 
 	//Enemies
 	float spawnTimerUpDown;
@@ -84,6 +95,10 @@ private:
 	float spawnTimerRate;
 	std::vector<Enemy*> enemiesUpDown;
 	std::vector<Enemy*> enemiesLeftRight;
+	Enemy* enemyForFunction;
+	int enemiesLevel;
+	float enemySpeedDirPlus;
+	float enemySpeedDirMinus;
 
 	//Bullet
 	float bulletDirX;
@@ -106,7 +121,7 @@ private:
 	bool gunDropPlay;
 	bool gunCorrectPlay;
 	int pointsDropGun;
-	int enemiesLevel;
+	
 
 	//Vaccine
 	int vaccineType;
@@ -120,8 +135,26 @@ private:
 	int vaccineDropPos_x;
 	int vaccineDropPos_y;
 
+	//GUI
+	float gameOverExplainPosY;
+	int gameOverExFontSize;
+	int gameOverExThickness;
+	float gameOverExStartPos;
+
+
+	//Game State
+	void initGameState();
+	/*
+	* GameState 1 is Menu
+	* GameState 2 is Game Play
+	* GameState 3 is Game Over
+	* GameState 4 is Ranking
+	* GameState 5 is Exit
+	*/
+
 	//Private functions
 	void initWindow();
+	void initMenu();
 	void initTextures();
 	void initAudio();
 	void initGUI();
@@ -138,8 +171,13 @@ public:
 	//Functions
 	void updateVaccineDrop();
 
-	//Update
+	//PollEvents
 	void updatePollEvents();
+
+	//GameState
+	void updateGameState();
+
+	//Update Game Play
 	void updateInput();
 	void updateGUI();
 	void updateWorld();
@@ -155,14 +193,27 @@ public:
 	void updateGunType();
 	void updateInfectedType();
 	void updateVaccineCollected();
+
+	//Update Menu
+	void updateSelectedMenu();
+
+	//Update Game Over
+	void updateSelectedGameOver();
+
+	//Main Update
 	void update();
+	void updateMenu();
+	void updateGameOver();
 
 	//Render
 	void renderGunDrop();
 	void renderVaccineDrop();
 	void renderGUI();
 	void renderWorld();
+
+	//Main Render
 	void render();
+	void renderMenu();
 
 	//Core
 	void run();

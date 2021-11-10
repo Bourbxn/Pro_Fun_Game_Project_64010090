@@ -34,11 +34,11 @@ void Enemy::initVariables()
 	this->last_dir_y = -1;
 }
 
-void Enemy::initDirectionVar(float dirX, float dirY)
+void Enemy::initDirectionVar(float dirX, float dirY, float speedDependsPowerMinus, float speedDependsPowerPlus)
 {
 	if (dirY == 1080 && dirX >= 0 && dirX <= 1920)		//Enemies move up
 	{
-		this->speed_y = -1.f;
+		this->speed_y = speedDependsPowerMinus;
 		this->speed_x = 0.f;
 		this->enemySprite.setTextureRect(IntRect(
 			(this->enemyTexture.getSize().x/3)*(this->animation),		//Position of model x
@@ -48,7 +48,7 @@ void Enemy::initDirectionVar(float dirX, float dirY)
 	}
 	if (dirY == -100 && dirX >= 0 && dirX <= 1920)		//Enemies move down
 	{
-		this->speed_y = 1.f;
+		this->speed_y = speedDependsPowerPlus;
 		this->speed_x = 0.f;
 		this->enemySprite.setTextureRect(IntRect(
 			(this->enemyTexture.getSize().x / 3) * (this->animation),		//Position of model x
@@ -59,7 +59,7 @@ void Enemy::initDirectionVar(float dirX, float dirY)
 	if (dirX == 0 && dirY >= 0 && dirY <= 1080)			//Enemies move right
 	{
 		this->speed_y = 0.f;
-		this->speed_x = 1.f;
+		this->speed_x = speedDependsPowerPlus;
 		this->enemySprite.setTextureRect(IntRect(
 			(this->enemyTexture.getSize().x / 3) * (this->animation),		//Position of model x
 			(this->enemyTexture.getSize().y / 4) * 1,						//Postion of model y
@@ -69,7 +69,7 @@ void Enemy::initDirectionVar(float dirX, float dirY)
 	if (dirX == 1920 && dirY >= 0 && dirY <= 1080)		//Enemies move left
 	{
 		this->speed_y = 0.f;
-		this->speed_x = -1.f;
+		this->speed_x = speedDependsPowerMinus;
 		this->enemySprite.setTextureRect(IntRect(
 			(this->enemyTexture.getSize().x / 3) * (this->animation),		//Position of model x
 			(this->enemyTexture.getSize().y / 4) * 2,						//Postion of model y
@@ -78,15 +78,13 @@ void Enemy::initDirectionVar(float dirX, float dirY)
 	}
 }
 
-Enemy::Enemy(float pos_x,float pos_y)
+Enemy::Enemy(float pos_x,float pos_y,float speedDependsPowerMinus, float speedDependsPowerPlus)
 {
 	this->initVariables();
 	this->initTexture();
 	this->initSprite();
 	this->enemySprite.setPosition(pos_x, pos_y);
-	this->initDirectionVar(pos_x, pos_y);
-	
-	
+	this->initDirectionVar(pos_x, pos_y,speedDependsPowerMinus,speedDependsPowerPlus);
 
 }
 
@@ -148,6 +146,7 @@ void Enemy::updateEnemyMoveLeftRight()
 
 	this->enemySprite.move(this->speed_x, this->speed_y + this->dir_y);
 }
+
 
 //Functions
 void Enemy::update()
