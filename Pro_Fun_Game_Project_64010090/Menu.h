@@ -42,6 +42,7 @@ public:
 
 	//Update
 	void updateInput();
+	void setNewMenuState();
 
 
 	//render

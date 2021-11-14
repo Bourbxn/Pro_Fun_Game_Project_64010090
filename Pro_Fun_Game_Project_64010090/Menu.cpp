@@ -10,7 +10,7 @@ void Menu::initVariables()
 
 void Menu::initTexture()
 {
-	if (!this->textureMenuBG.loadFromFile("Textures/menu_bg.jpg"))
+	if (!this->textureMenuBG.loadFromFile("Textures/menu_bg.png"))
 	{
 		std::cout << "ERROR::GUN::INITTEXTURE::Could not load textures file." << "\n";
 	}
@@ -22,7 +22,7 @@ void Menu::initSprite()
 	this->spriteMenuBG.setTexture(this->textureMenuBG);
 
 	//Resize the sprite
-	this->spriteMenuBG.scale(3.f, 3.f);
+	this->spriteMenuBG.scale(1.f, 1.f);
 
 	//Set Position the sprite
 	this->spriteMenuBG.setPosition(Vector2f(0.f, 0.f));
@@ -105,7 +105,7 @@ void Menu::updateInput()
 	{
 		if (this->selectedMenu == 0)
 		{
-			this->GameState = 2;
+			this->GameState = 6;
 		}
 		else if (this->selectedMenu == 1)
 		{
@@ -121,6 +121,11 @@ void Menu::updateInput()
 
 
 
+}
+
+void Menu::setNewMenuState()
+{
+	this->GameState = 1;
 }
 
 void Menu::render(RenderTarget& target)

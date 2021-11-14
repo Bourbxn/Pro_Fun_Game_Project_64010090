@@ -2,7 +2,10 @@
 
 void Game::initGameState()
 {
+	this->gameRestart = false;
 	this->GameState = 1;
+	this->nameInput = false;
+	this->deltaTime6to2 = 0;
 }
 
 void Game::initWindow()
@@ -21,6 +24,17 @@ void Game::initTextures()
 {
 	this->textures["BULLET"] = new Texture();
 	this->textures["BULLET"]->loadFromFile("Textures/bullet.png");
+}
+
+void Game::initTextboxName()
+{
+	this->textboxName = new Textbox(true);
+	this->textboxName->setFont(this->font);
+	this->textboxName->setPosition({
+		1920/2 - 300,
+		1080/2 - 80 });
+	this->textboxName->setOutline(5, Color::Black);
+	this->textboxName->setLimit(true, 8);
 }
 
 void Game::initAudio()
@@ -178,6 +192,7 @@ Game::Game()
 	this->initGameState();
 	this->initWindow();
 	this->initMenu();
+	this->initTextboxName();
 	this->initTextures();
 	this->initAudio();
 	this->initGUI();
@@ -195,6 +210,7 @@ Game::~Game()
 	delete this->player;
 	delete this->gun;
 	delete this->vaccine;
+	delete this->textboxName;
 	
 	//Delete textures
 	for (auto &i : this->textures)
@@ -307,11 +323,13 @@ void Game::run()
 	while (this->window->isOpen())
 	{
 		std::cout << this->GameState << std::endl;
-		this->updateGameState();
+		//std::cout << this->deltaTime6to2 << std::endl;
 
+		//MAIN STATE
 		//Menu
 		if (this->GameState == 1)
 		{
+			this->updateRestartEnemies();
 			this->updateMenu();
 			this->renderMenu();
 			this->updatePollEvents();
@@ -320,24 +338,41 @@ void Game::run()
 		//Game Play
 		else if (this->GameState == 2)
 		{
+			//this->updateRestartGame();
 			this->updatePollEvents();
+			this->updateGameState();
 			this->update();
 			this->render();
 		}
 		//Game Over
 		else if (this->GameState == 3)
 		{
+			this->updateRestartEnemies();
+			this->updateRestartGame();
 			this->updateGameOver();
+			this->renderGameOver();
 		}
 		//Ranking
 		else if (this->GameState == 4)
 		{
-			//...
+			this->updatePollEvents();
+			this->renderRanking();
 		}
 		//Exit
 		else if (this->GameState == 5)
 		{
 			this->window->close();
+		}
+
+		//SUB_STATE
+		//Enter Name
+		
+		else if (this->GameState == 6)
+		{
+			this->updateDeltaTime6to2();
+			this->updatePollEventsInputName();
+			this->updateSelectNameInput();
+			this->renderInputName();
 		}
 		
 	}
@@ -351,25 +386,43 @@ void Game::updatePollEvents()
 	{
 		if (ev.Event::type == Event::Closed)
 			this->window->close();
-		if (ev.Event::KeyPressed && ev.Event::key.code == Keyboard::Escape)
-			this->window->close();
+		//if (ev.Event::KeyPressed && ev.Event::key.code == Keyboard::Escape)
+			//this->window->close();
+	}
+}
+
+void Game::updatePollEventsInputName()
+{
+	Event ev;
+	while (this->window->pollEvent(ev))
+	{
+		switch (ev.type) {
+
+		case Event::TextEntered:
+			this->textboxName->typedOn(ev);
+		}
 	}
 }
 
 void Game::updateGameState()
 {
-	//Update Game State from Menu
-
 	//Update Game Over
 	if (this->player->getHp() <= 0)
 	{
+		
 		this->GameState = 3;
+		this->initSystems();
+		this->initPlayer();
+		this->initGun();
+		this->initVaccine();
+		this->initEnemies();
+		//Delete enemies
 	}
-	if (this->GameState == 3)
-	{
-		this->player->setHp(100);
-		this->infectPlayer = false;
-	}
+}
+
+void Game::updateDeltaTime6to2()
+{
+	this->deltaTime6to2++;
 }
 
 void Game::updateInput()
@@ -775,20 +828,20 @@ void Game::updateEnemiesUpDown()
 
 
 		//Bullet culling (top of screen)
-		if (enemy->getBounds().top > this->window->getSize().y)
+		if (enemy->getBounds().top > this->window->getSize().y )
 		{
 			//Delete enemy
 			delete this->enemiesUpDown.at(counter);
 			this->enemiesUpDown.erase(this->enemiesUpDown.begin() + counter);
 		}
-		if (enemy->getBounds().top < -150)
+		if (enemy->getBounds().top < -150 )
 		{
 			//Delete enemy
 			delete this->enemiesUpDown.at(counter);
 			this->enemiesUpDown.erase(this->enemiesUpDown.begin() + counter);
 		}
 		//Enemy player Collision
-		else if (enemy->getBounds().intersects(this->player->getBounds())) 
+		else if (enemy->getBounds().intersects(this->player->getBounds()))
 		{
 			//Play SFX
 			bourbxnHurtSFX.play();
@@ -830,13 +883,13 @@ void Game::updateEnemiesLeftRight()
 
 
 		//Bullet culling (top of screen)
-		if (enemy->getBounds().left > this->window->getSize().x)
+		if (enemy->getBounds().left > this->window->getSize().x )
 		{
 			//Delete enemy
 			delete this->enemiesLeftRight.at(counter);
 			this->enemiesLeftRight.erase(this->enemiesLeftRight.begin() + counter);
 		}
-		if (enemy->getBounds().left < 0)
+		if (enemy->getBounds().left < 0 )
 		{
 			//Delete enemy
 			delete this->enemiesLeftRight.at(counter);
@@ -1010,8 +1063,8 @@ void Game::updateHP()
 
 void Game::updateGunDrop()
 {
-	std::cout << this->spawnTimerRate << std::endl;
-	std::cout << this->enemiesLevel << std::endl;
+	//std::cout << this->spawnTimerRate << std::endl;
+	//std::cout << this->enemiesLevel << std::endl;
 	//Random Gun
 	if (this->points % this->pointsDropGun == 0
 		&& this->points != 0 
@@ -1345,6 +1398,48 @@ void Game::updateSelectedGameOver()
 		this->GameState = 1;
 	}
 }
+
+void Game::updateSelectNameInput()
+{
+	//Update Input Name
+	if (Keyboard::isKeyPressed(Keyboard::Enter) && this->deltaTime6to2 > 10)
+	{
+		this->GameState = 2;
+		this->deltaTime6to2 = 0;
+		this->name = this->textboxName->getText();
+		std::cout << this->name << std::endl;
+	}
+	if (Keyboard::isKeyPressed(Keyboard::Escape) && this->deltaTime6to2 > 10)
+	{
+		this->GameState = 1;
+		this->deltaTime6to2 = 0;
+		this->initTextboxName();
+	}
+}
+
+void Game::updateRestartGame()
+{
+	this->initSystems();
+	this->initPlayer();
+	this->initGun();
+	this->initVaccine();
+	this->initEnemies();
+}
+
+void Game::updateRestartEnemies()
+{
+	for (int i = 0; i < this->enemiesUpDown.size(); ++i)
+	{
+		delete this->enemiesUpDown[i];
+		this->enemiesUpDown.erase(this->enemiesUpDown.begin() + i);
+	}
+
+	for (int i = 0; i < this->enemiesLeftRight.size(); ++i)
+	{
+		delete this->enemiesLeftRight[i];
+		this->enemiesLeftRight.erase(this->enemiesLeftRight.begin() + i);
+	}
+}
 	
 void Game::update()
 {
@@ -1375,11 +1470,13 @@ void Game::updateMenu()
 {
 	this->menu->updateInput();
 	this->updateSelectedMenu();
+	this->menu->setNewMenuState();
 }
 
 void Game::updateGameOver()
 {
 	this->updateSelectedGameOver();
+	this->gameRestart = true;
 }
 
 void Game::renderGunDrop()
@@ -1439,24 +1536,38 @@ void Game::render()
 
 	this->renderGUI();
 	this->vaccine->render(*this->window);
-
-	//Game Over Screen
-
-	if (this->player->getHp() <= 0)
-	{
-		this->window->draw(this->gameOverText);
-		this->window->draw(this->gameOverExplain1);
-		this->window->draw(this->gameOverExplain2);
-		this->window->draw(this->gameOverExplain3);
-		this->window->draw(this->gameOverExplain4);
-		this->window->draw(this->gameOverExplain5);
-	}
 	this->window->display();
+	
 }
 
 void Game::renderMenu()
 {
 	this->window->clear();
 	this->menu->render(*this->window);
+	this->window->display();
+}
+
+void Game::renderGameOver()
+{
+	this->window->clear();
+	this->window->draw(this->gameOverText);
+	this->window->draw(this->gameOverExplain1);
+	this->window->draw(this->gameOverExplain2);
+	this->window->draw(this->gameOverExplain3);
+	this->window->draw(this->gameOverExplain4);
+	this->window->draw(this->gameOverExplain5);
+	this->window->display();
+}
+
+void Game::renderRanking()
+{
+	this->window->clear();
+	this->window->display();
+}
+
+void Game::renderInputName()
+{
+	this->window->clear();
+	this->textboxName->render(*this->window);
 	this->window->display();
 }

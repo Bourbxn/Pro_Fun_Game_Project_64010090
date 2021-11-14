@@ -6,6 +6,7 @@
 #include "Vaccine.h"
 #include "sstream"
 #include "Menu.h"
+#include "Textbox.h"
 
 
 
@@ -17,6 +18,15 @@ private:
 
 	//Menu
 	Menu* menu;
+
+	//Input Name
+	Textbox* textboxName;
+	std::string name;
+	char temp[255];
+	int scoreRanking[6];
+	std::string nameRanking[6];
+	std::vector <std::pair<int, std::string>> userScore;
+
 
 	//Resource
 	std::map<std::string, Texture*>textures;
@@ -86,6 +96,11 @@ private:
 
 	//Game State
 	int GameState;
+	bool gameOverBackMenu;
+	bool gameRestart;
+	bool nameInput;
+	int deltaTime6to2;
+
 
 	//Enemies
 	float spawnTimerUpDown;
@@ -155,6 +170,7 @@ private:
 	//Private functions
 	void initWindow();
 	void initMenu();
+	void initTextboxName();
 	void initTextures();
 	void initAudio();
 	void initGUI();
@@ -173,9 +189,11 @@ public:
 
 	//PollEvents
 	void updatePollEvents();
+	void updatePollEventsInputName();
 
 	//GameState
 	void updateGameState();
+	void updateDeltaTime6to2();
 
 	//Update Game Play
 	void updateInput();
@@ -199,6 +217,11 @@ public:
 
 	//Update Game Over
 	void updateSelectedGameOver();
+	void updateRestartGame();
+	void updateRestartEnemies();
+
+	//Update Name Input
+	void updateSelectNameInput();
 
 	//Main Update
 	void update();
@@ -214,6 +237,10 @@ public:
 	//Main Render
 	void render();
 	void renderMenu();
+	void renderGameOver();
+	void renderRanking();
+	//Sub Render
+	void renderInputName();
 
 	//Core
 	void run();
