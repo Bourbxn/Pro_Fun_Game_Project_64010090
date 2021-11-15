@@ -1,5 +1,5 @@
-Boss 56
-Pond 53
-Jino 39
-Ning 20
-Eark 12
+Boss 2
+Pond 5
+Jino 4
+Ning 3
+Eark 1

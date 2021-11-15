@@ -45,34 +45,41 @@ void Game::initRanking()
 		"Ranking",
 		&this->font);
 	
-	FILE* rankingFile;
-	char tempRank[255];
-	int scoreRank[10];
-	std::string nameRank[10];
-	std::vector <std::pair<int, std::string>> userScore;
-	rankingFile = fopen("Score/Ranking.txt", "r");
+	//Read
+	this->rankingFile = fopen("./Score/Ranking.txt", "r");
 	for (int i = 0; i < 5; i++)
 	{
-		fscanf(rankingFile,"%s", &tempRank);
-		std::cout << tempRank << std::endl;
-		nameRank[i] = tempRank;
-		fscanf(rankingFile,"%d", &scoreRank[i]);
-		userScore.push_back(std::make_pair(scoreRank[i], nameRank[i]));
+		fscanf(this->rankingFile,"%s", &this->tempRank);
+		//std::cout << this->tempRank << std::endl;
+		this->nameRank[i] = this->tempRank;
+		fscanf(this->rankingFile,"%d", &this->scoreRank[i]);
+		this->userScore.push_back(std::make_pair(this->scoreRank[i], this->nameRank[i]));
 		//cout << temp << " " << score;
 	}
-	nameRank[5] = "TEST";
-	scoreRank[5] = 1234;
-	userScore.push_back(std::make_pair(scoreRank[5], nameRank[5]));
+	this->nameRank[5] = "TEST";
+	this->scoreRank[5] = 1234;
+	if (this->points > this->scoreRank[4])
+	{
+		std::cout << scoreRank[4] << std::endl;
+		std::cout << "score update" << std::endl;
+		this->scoreRank[4] = this->points;
+		this->nameRank[4] = this->name;
+		this->userScore.push_back(std::make_pair(this->scoreRank[4], this->nameRank[4]));
+	}
+	this->userScore.push_back(std::make_pair(this->scoreRank[5], this->nameRank[5]));
 	sort(userScore.begin(), userScore.end());
-	fclose(rankingFile);
+	fclose(this->rankingFile);
+	
 
-	fopen("Score / Ranking.txt", "w");
+	//Write
+	fopen("./Score / Ranking.txt", "w");
 	for (int i = 5; i >= 1; i--)
 	{
-		strcpy(tempRank, userScore[i].second.c_str());
-		fprintf(rankingFile, "%s %d\n", tempRank, userScore[i].first);
+		strcpy(this->tempRank, this->userScore[i].second.c_str());
+		fprintf(this->rankingFile, "%s %d\n", this->tempRank, this->userScore[i].first);
 	}
-	fclose(rankingFile);
+	fclose(this->rankingFile);
+
 	int posRankingNameX = 550;
 	int posRankingScoreX = 1150;
 	int PosRankingY = 650;
@@ -373,7 +380,8 @@ void Game::run()
 {
 	while (this->window->isOpen())
 	{
-		std::cout << this->GameState << std::endl;
+		std::cout << this->points << std::endl;
+		//std::cout << this->GameState << std::endl;
 		//std::cout << this->deltaTime6to2 << std::endl;
 
 		//MAIN STATE
@@ -460,7 +468,7 @@ void Game::updateGameState()
 	//Update Game Over
 	if (this->player->getHp() <= 0)
 	{
-		
+		this->updateRanking();
 		this->GameState = 3;
 		this->initSystems();
 		this->initPlayer();
@@ -1489,6 +1497,40 @@ void Game::updateRestartEnemies()
 	{
 		delete this->enemiesLeftRight[i];
 		this->enemiesLeftRight.erase(this->enemiesLeftRight.begin() + i);
+	}
+}
+
+void Game::updateRanking()
+{
+	std::cout << this->points << std::endl;
+	std::cout << this->name << std::endl;
+	if (this->points > this->scoreRank[4])
+	{
+		this->rankingFile = fopen("./Score/Ranking.txt", "r");
+		for (int i = 0; i < 5; i++)
+		{
+			fscanf(this->rankingFile, "%s", &this->tempRank);
+			//std::cout << this->tempRank << std::endl;
+			this->nameRank[i] = this->tempRank;
+			fscanf(this->rankingFile, "%d", &this->scoreRank[i]);
+			this->userScore.push_back(std::make_pair(this->scoreRank[i], this->nameRank[i]));
+			//cout << temp << " " << score;
+		}
+		this->nameRank[4] = this->name;
+		this->scoreRank[4] = this->points;
+		this->userScore.push_back(std::make_pair(this->scoreRank[4], this->nameRank[4]));
+		sort(userScore.begin(), userScore.end());
+		fclose(this->rankingFile);
+
+
+		//Write
+		fopen("./Score / Ranking.txt", "w");
+		for (int i = 5; i >= 1; i--)
+		{
+			strcpy(this->tempRank, this->userScore[i].second.c_str());
+			fprintf(this->rankingFile, "%s %d\n", this->tempRank, this->userScore[i].first);
+		}
+		fclose(this->rankingFile);
 	}
 }
 	
