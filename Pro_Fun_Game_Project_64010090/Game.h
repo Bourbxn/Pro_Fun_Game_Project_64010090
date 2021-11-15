@@ -1,4 +1,6 @@
 #pragma once
+#define _CRT_SECURE_NO_WARNINGS
+
 #include "Bullet.h"
 #include "Enemy.h"
 #include "Player.h"
@@ -7,7 +9,7 @@
 #include "sstream"
 #include "Menu.h"
 #include "Textbox.h"
-
+#include "Ranking.h"
 
 
 class Game
@@ -22,11 +24,11 @@ private:
 	//Input Name
 	Textbox* textboxName;
 	std::string name;
-	char temp[255];
-	int scoreRanking[6];
-	std::string nameRanking[6];
-	std::vector <std::pair<int, std::string>> userScore;
 
+	//Ranking 
+	Ranking* topic;
+	Ranking* rankScore[6];
+	Ranking* rankName[6];
 
 	//Resource
 	std::map<std::string, Texture*>textures;
@@ -171,6 +173,7 @@ private:
 	void initWindow();
 	void initMenu();
 	void initTextboxName();
+	void initRanking();
 	void initTextures();
 	void initAudio();
 	void initGUI();

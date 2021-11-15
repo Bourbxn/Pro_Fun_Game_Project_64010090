@@ -1,5 +1,6 @@
 #pragma once
 #pragma once
+#include <stdio.h>
 #include "iostream"
 #include "vector"
 #include "sstream"
@@ -28,8 +29,10 @@ public:
 	Ranking(int x, int y, std::string word,Font* font);
 	virtual ~Ranking();
 
+	//Functinos
+	void getSize();
+
 	//Render 
 	void renderBackground(RenderTarget& target);
 	void render(RenderTarget& target);
 };
-

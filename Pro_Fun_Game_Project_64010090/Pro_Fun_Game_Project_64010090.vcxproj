@@ -152,6 +152,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Menu.cpp" />
     <ClCompile Include="Player.cpp" />
+    <ClCompile Include="Ranking.cpp" />
     <ClCompile Include="Textbox.cpp" />
     <ClCompile Include="Vaccine.cpp" />
   </ItemGroup>
@@ -162,6 +163,7 @@
     <ClInclude Include="Gun.h" />
     <ClInclude Include="Menu.h" />
     <ClInclude Include="Player.h" />
+    <ClInclude Include="Ranking.h" />
     <ClInclude Include="Textbox.h" />
     <ClInclude Include="Vaccine.h" />
   </ItemGroup>

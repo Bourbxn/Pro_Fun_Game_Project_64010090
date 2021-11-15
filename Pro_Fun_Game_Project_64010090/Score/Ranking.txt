@@ -1,5 +1,5 @@
-Boss 100
-Kuay 50
-Hee 128
-Thanunchai 999
-Thana 1
+Boss 56
+Pond 53
+Jino 39
+Ning 20
+Eark 12

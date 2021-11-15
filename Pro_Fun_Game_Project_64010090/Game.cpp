@@ -37,6 +37,56 @@ void Game::initTextboxName()
 	this->textboxName->setLimit(true, 8);
 }
 
+void Game::initRanking()
+{
+	this->topic = new Ranking(
+		this->window->getSize().x / 2 - 250,
+		25, 
+		"Ranking",
+		&this->font);
+	
+	FILE* rankingFile;
+	char tempRank[255];
+	int scoreRank[10];
+	std::string nameRank[10];
+	std::vector <std::pair<int, std::string>> userScore;
+	rankingFile = fopen("Score/Ranking.txt", "r");
+	for (int i = 0; i < 5; i++)
+	{
+		fscanf(rankingFile,"%s", &tempRank);
+		std::cout << tempRank << std::endl;
+		nameRank[i] = tempRank;
+		fscanf(rankingFile,"%d", &scoreRank[i]);
+		userScore.push_back(std::make_pair(scoreRank[i], nameRank[i]));
+		//cout << temp << " " << score;
+	}
+	nameRank[5] = "TEST";
+	scoreRank[5] = 1234;
+	userScore.push_back(std::make_pair(scoreRank[5], nameRank[5]));
+	sort(userScore.begin(), userScore.end());
+	fclose(rankingFile);
+
+	fopen("Score / Ranking.txt", "w");
+	for (int i = 5; i >= 1; i--)
+	{
+		strcpy(tempRank, userScore[i].second.c_str());
+		fprintf(rankingFile, "%s %d\n", tempRank, userScore[i].first);
+	}
+	fclose(rankingFile);
+	int posRankingNameX = 550;
+	int posRankingScoreX = 1150;
+	int PosRankingY = 650;
+
+	for (int i = 0; i < 5; i++)
+	{
+		this->rankName[i] = new Ranking(posRankingNameX, PosRankingY - (i * 100), userScore[i].second, &this->font);
+		this->rankScore[i] = new Ranking(posRankingScoreX, PosRankingY - (i * 100), std::to_string(userScore[i].first), &this->font);
+	}
+	/*this->rankFirstScore = new Ranking(10, 40, userScore[0].second, &this->font);
+	this->rankFirstName = new Ranking(100, 40, std::to_string(userScore[5].first), &this->font);*/
+	
+}
+
 void Game::initAudio()
 {
 	//Load Pistol shot sound
@@ -193,6 +243,7 @@ Game::Game()
 	this->initWindow();
 	this->initMenu();
 	this->initTextboxName();
+	this->initRanking();
 	this->initTextures();
 	this->initAudio();
 	this->initGUI();
@@ -386,8 +437,8 @@ void Game::updatePollEvents()
 	{
 		if (ev.Event::type == Event::Closed)
 			this->window->close();
-		//if (ev.Event::KeyPressed && ev.Event::key.code == Keyboard::Escape)
-			//this->window->close();
+		if (ev.Event::KeyPressed && ev.Event::key.code == Keyboard::Escape)
+			this->GameState = 1;
 	}
 }
 
@@ -1562,6 +1613,14 @@ void Game::renderGameOver()
 void Game::renderRanking()
 {
 	this->window->clear();
+	this->topic->renderBackground(*this->window);
+	this->topic->render(*this->window);
+	for (int i = 0; i < 5; i++) {
+		this->rankScore[i]->render(*this->window);
+		this->rankName[i]->render(*this->window);
+	}
+	/*this->rankFirstScore->render(*this->window);
+	this->rankFirstName->render(*this->window);*/
 	this->window->display();
 }
 
