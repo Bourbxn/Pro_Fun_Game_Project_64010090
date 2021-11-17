@@ -67,19 +67,19 @@ void Menu::initNameKMITL()
 		std::cout << "ERROR::GAME::Failed to load font" << "\n";
 	this->nameKMITL.setFont(this->font);
 	this->nameKMITL.setPosition({
-		1920 / 2 ,
-		1080 / 2 });
+		1920 / 2  + 540,
+		1080 / 2  + 400});
 	this->nameKMITL.setString("jakkapat paijit");
-	this->nameKMITL.setFillColor(Color::White);
+	this->nameKMITL.setFillColor(Color(252, 183, 138));
 	this->nameKMITL.setOutlineThickness(5);
 	this->nameKMITL.setCharacterSize(50);
 
 	this->numberKMITL.setFont(this->font);
 	this->numberKMITL.setPosition({
-		1920 / 2 - 590,
-		1080 / 2 - 520 });
+		1920 / 2 + 710,
+		1080 / 2 + 450 });
 	this->numberKMITL.setString("64010090");
-	this->numberKMITL.setFillColor(Color::White);
+	this->numberKMITL.setFillColor(Color(252, 183, 138));
 	this->numberKMITL.setOutlineThickness(5);
 	this->numberKMITL.setCharacterSize(50);
 }

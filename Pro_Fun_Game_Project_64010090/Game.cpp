@@ -10,7 +10,7 @@ void Game::initGameState()
 
 void Game::initWindow()
 {
-	this->window = new RenderWindow(VideoMode(1920,1080),"Freaking Virus",Style::Close | Style::Default);
+	this->window = new RenderWindow(VideoMode(1920,1080),"Freaking Virus",Style::Close | Style::Fullscreen);
 	this->window->setFramerateLimit(60);
 	this->window->setVerticalSyncEnabled(false);
 }
@@ -31,7 +31,7 @@ void Game::initTextboxName()
 	this->textboxName = new Textbox(true);
 	this->textboxName->setFont(this->font);
 	this->textboxName->setPosition({
-		1920/2 - 300,
+		1920/2 - 210,
 		1080/2 - 80 });
 	this->textboxName->setOutline(5, Color::Black);
 	this->textboxName->setLimit(true, 7);

@@ -5,13 +5,14 @@ void Textbox::initVariables()
 	this->isSelected = false;
 	this->hasLimit = false;
 	this->textbox.setCharacterSize(100);
-	this->textbox.setFillColor(Color::White);
+	this->textbox.setFillColor(Color(255, 215, 0));
 }
 
 Textbox::Textbox(bool sel)
 {
 	this->initVariables();
 	this->initBackground();
+	this->initText();
 	this->isSelected = sel;
 	if (sel)
 	{
@@ -48,12 +49,23 @@ void Textbox::inputLogic(int charTyped)
 
 void Textbox::initBackground()
 {
-	if (!this->backgroundTex.loadFromFile("Textures/map.png"))
+	if (!this->backgroundTex.loadFromFile("Textures/menu_bg.png"))
 	{
 		std::cout << "ERROR::GAME::COULD NOT LOAD BACKGROUND TEXTURE" << "\n";
 	}
-	this->background.setScale(3.f, 3.f);
+	this->background.setScale(1.f, 1.f);
 	this->background.setTexture(this->backgroundTex);
+}
+
+void Textbox::initText()
+{
+	if (!this->font.loadFromFile("Fonts/ARCADECLASSIC.ttf"))
+		std::cout << "ERROR::GAME::Failed to load font" << "\n";
+	this->textEnterName.setFont(this->font);
+	this->textEnterName.setPosition(375, 25);
+	this->textEnterName.setString("enter  your  name");
+	this->textEnterName.setOutlineThickness(10);
+	this->textEnterName.setCharacterSize(150);
 }
 
 void Textbox::deleteLastChar()
@@ -156,6 +168,7 @@ void Textbox::render(RenderTarget& target)
 {
 	target.draw(this->background);
 	target.draw(this->textbox);
+	target.draw(this->textEnterName);
 }
 
 

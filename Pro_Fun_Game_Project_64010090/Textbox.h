@@ -21,8 +21,10 @@ class Textbox
 {
 private:
 	Text textbox;
+	Text textEnterName;
 	Texture backgroundTex;
 	Sprite background;
+	Font font;
 	std::ostringstream text;
 	bool isSelected;
 	bool hasLimit;
@@ -30,6 +32,7 @@ private:
 	//Init
 	void initVariables();
 	void initBackground();
+	void initText();
 
 	//Function
 	void inputLogic(int charTyped);
