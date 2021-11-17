@@ -30,10 +30,7 @@ private:
 	Ranking* rankName[6];
 	Ranking* rankScore[6];
 	FILE* rankingFile;
-	char tempRank[255];
-	int scoreRank[10];
-	std::string nameRank[10];
-	std::vector <std::pair<int, std::string>> userScore;
+	
 
 	//Resource
 	std::map<std::string, Texture*>textures;
