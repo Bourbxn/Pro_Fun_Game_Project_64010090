@@ -21,8 +21,11 @@ private:
 	Text text;
 	Texture backgroundTex;
 	Sprite background;
+	Texture backgroundGameOverTex;
+	Sprite backgroundGameOver;
 
 	void initBackground();
+	void initBackgroundGameOver();
 	void initText();
 
 public:
@@ -31,8 +34,11 @@ public:
 
 	//Functinos
 	void getSize();
+	void setFontColor(Color color);
+	void setFontSize(int size);
 
 	//Render 
 	void renderBackground(RenderTarget& target);
+	void renderBackgroundGameOver(RenderTarget& target);
 	void render(RenderTarget& target);
 };

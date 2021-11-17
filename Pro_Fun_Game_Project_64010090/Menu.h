@@ -17,6 +17,8 @@ private:
 	Sprite spriteMenuBG;
 	Texture textureMenuBG;
 	Text menu[maxItem];
+	Text nameKMITL;
+	Text numberKMITL;
 	Font font;
 
 	//Private Function
@@ -24,6 +26,7 @@ private:
 	void initTexture();
 	void initSprite();
 	void initText();
+	void initNameKMITL();
 
 	//Variables
 	int selectedMenu;

@@ -61,12 +61,36 @@ void Menu::initText()
 	
 }
 
+void Menu::initNameKMITL()
+{
+	if (!this->font.loadFromFile("Fonts/ARCADECLASSIC.ttf"))
+		std::cout << "ERROR::GAME::Failed to load font" << "\n";
+	this->nameKMITL.setFont(this->font);
+	this->nameKMITL.setPosition({
+		1920 / 2 ,
+		1080 / 2 });
+	this->nameKMITL.setString("jakkapat paijit");
+	this->nameKMITL.setFillColor(Color::White);
+	this->nameKMITL.setOutlineThickness(5);
+	this->nameKMITL.setCharacterSize(50);
+
+	this->numberKMITL.setFont(this->font);
+	this->numberKMITL.setPosition({
+		1920 / 2 - 590,
+		1080 / 2 - 520 });
+	this->numberKMITL.setString("64010090");
+	this->numberKMITL.setFillColor(Color::White);
+	this->numberKMITL.setOutlineThickness(5);
+	this->numberKMITL.setCharacterSize(50);
+}
+
 Menu::Menu()
 {
 	this->initVariables();
 	this->initTexture();
 	this->initSprite();
 	this->initText();
+	this->initNameKMITL();
 }
 
 Menu::~Menu()
@@ -135,4 +159,6 @@ void Menu::render(RenderTarget& target)
 	{
 		target.draw(this->menu[i]);
 	}
+	target.draw(this->nameKMITL);
+	target.draw(this->numberKMITL);
 }
