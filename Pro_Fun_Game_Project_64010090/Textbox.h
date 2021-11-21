@@ -26,6 +26,7 @@ private:
 	Sprite background;
 	Font font;
 	std::ostringstream text;
+	RectangleShape rectangleBox;
 	bool isSelected;
 	bool hasLimit;
 	int limit;

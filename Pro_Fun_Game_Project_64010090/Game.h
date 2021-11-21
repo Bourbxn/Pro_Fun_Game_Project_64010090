@@ -53,6 +53,8 @@ private:
 	Sound gunDropSFX;
 	SoundBuffer gunCorrectBuff;
 	Sound gunCorrectSFX;
+	SoundBuffer pressButtonBuff;
+	Sound pressButtonSFX;
 
 	//GUI
 	Font font;

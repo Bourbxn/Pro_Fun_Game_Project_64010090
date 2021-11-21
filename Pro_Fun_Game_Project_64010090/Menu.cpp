@@ -10,22 +10,32 @@ void Menu::initVariables()
 
 void Menu::initTexture()
 {
+	//Background
 	if (!this->textureMenuBG.loadFromFile("Textures/menu_bg.png"))
 	{
-		std::cout << "ERROR::GUN::INITTEXTURE::Could not load textures file." << "\n";
+		std::cout << "ERROR::BACKGROUND::INITTEXTURE::Could not load textures file." << "\n";
 	}
+
+	//Logo
+	if (!this->textureMenuLogo.loadFromFile("Textures/logo.png"))
+	{
+		std::cout << "ERROR::LOGO::INITTEXTURE::Could not load textures file." << "\n";
+	}
+
 }
 
 void Menu::initSprite()
 {
-	//Set the texture to the sprite
+	//Background
 	this->spriteMenuBG.setTexture(this->textureMenuBG);
-
-	//Resize the sprite
 	this->spriteMenuBG.scale(1.f, 1.f);
-
-	//Set Position the sprite
 	this->spriteMenuBG.setPosition(Vector2f(0.f, 0.f));
+
+	//LOGO
+	this->spriteMenuLogo.setTexture(this->textureMenuLogo);
+	this->spriteMenuLogo.scale(1.f, 1.f);
+	this->spriteMenuLogo.setPosition(Vector2f(0.f, 20.f));
+
 }
 
 void Menu::initText()
@@ -41,7 +51,7 @@ void Menu::initText()
 	this->menu[0].setCharacterSize(this->fontSize);
 	this->menu[0].setFillColor(Color::Red);
 	this->menu[0].setString("Play");
-	this->menu[0].setPosition(Vector2f(200, 200));
+	this->menu[0].setPosition(Vector2f(200, 350));
 
 
 	this->menu[1].setFont(this->font);
@@ -49,16 +59,47 @@ void Menu::initText()
 	this->menu[1].setCharacterSize(this->fontSize);
 	this->menu[1].setFillColor(Color::White);
 	this->menu[1].setString("Ranking");
-	this->menu[1].setPosition(Vector2f(200, 400));
+	this->menu[1].setPosition(Vector2f(200, 500));
 
 	this->menu[2].setFont(this->font);
 	this->menu[2].setOutlineThickness(this->fontThickness);
 	this->menu[2].setCharacterSize(this->fontSize);
 	this->menu[2].setFillColor(Color::White);
 	this->menu[2].setString("Exit");
-	this->menu[2].setPosition(Vector2f(200, 600));
-	
-	
+	this->menu[2].setPosition(Vector2f(200, 650));
+}
+
+void Menu::initHowToPlay()
+{
+	if (!this->font.loadFromFile("Fonts/ARCADECLASSIC.ttf"))
+		std::cout << "ERROR::GAME::Failed to load font" << "\n";
+	this->moveH2P.setFont(this->font);
+	this->moveH2P.setString("move");
+	this->moveH2P.setPosition({102,1010});
+	this->moveH2P.setFillColor(Color(192, 192, 192));
+	this->moveH2P.setOutlineThickness(4);
+	this->moveH2P.setCharacterSize(40);
+
+	this->shootH2P.setFont(this->font);
+	this->shootH2P.setString("shoot");
+	this->shootH2P.setPosition({ 360,1010 });
+	this->shootH2P.setFillColor(Color(192, 192, 192));
+	this->shootH2P.setOutlineThickness(4);
+	this->shootH2P.setCharacterSize(40);
+
+	this->escH2P.setFont(this->font);
+	this->escH2P.setString("back");
+	this->escH2P.setPosition({578,1010 });
+	this->escH2P.setFillColor(Color(192, 192, 192));
+	this->escH2P.setOutlineThickness(4);
+	this->escH2P.setCharacterSize(40);
+
+	this->enterH2P.setFont(this->font);
+	this->enterH2P.setString("select");
+	this->enterH2P.setPosition({ 720,1010 });
+	this->enterH2P.setFillColor(Color(192, 192, 192));
+	this->enterH2P.setOutlineThickness(4);
+	this->enterH2P.setCharacterSize(40);
 }
 
 void Menu::initNameKMITL()
@@ -91,6 +132,7 @@ Menu::Menu()
 	this->initSprite();
 	this->initText();
 	this->initNameKMITL();
+	this->initHowToPlay();
 }
 
 Menu::~Menu()
@@ -155,10 +197,15 @@ void Menu::setNewMenuState()
 void Menu::render(RenderTarget& target)
 {
 	target.draw(this->spriteMenuBG);
+	target.draw(this->spriteMenuLogo);
 	for (int i = 0; i < maxItem; i++)
 	{
 		target.draw(this->menu[i]);
 	}
 	target.draw(this->nameKMITL);
 	target.draw(this->numberKMITL);
+	target.draw(this->moveH2P);
+	target.draw(this->shootH2P);
+	target.draw(this->escH2P);
+	target.draw(this->enterH2P);
 }

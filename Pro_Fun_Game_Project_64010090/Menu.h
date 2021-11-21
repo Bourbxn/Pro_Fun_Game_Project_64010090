@@ -16,9 +16,15 @@ class Menu
 private:
 	Sprite spriteMenuBG;
 	Texture textureMenuBG;
+	Sprite spriteMenuLogo;
+	Texture textureMenuLogo;
 	Text menu[maxItem];
 	Text nameKMITL;
 	Text numberKMITL;
+	Text moveH2P;
+	Text shootH2P;
+	Text enterH2P;
+	Text escH2P;
 	Font font;
 
 	//Private Function
@@ -26,6 +32,7 @@ private:
 	void initTexture();
 	void initSprite();
 	void initText();
+	void initHowToPlay();
 	void initNameKMITL();
 
 	//Variables

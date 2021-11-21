@@ -136,6 +136,12 @@ void Game::initAudio()
 		std::cout << "ERROR::GAME::Failed to load Gun drop audio" << "\n";
 	gunCorrectSFX.setBuffer(gunCorrectBuff);
 	gunCorrectSFX.setVolume(100);
+	//GUI Sound
+	if (!pressButtonBuff.loadFromFile("Audio/press_button_sfx.wav"))
+		std::cout << "ERROR::GAME::Failed to load Press button audio" << "\n";
+	pressButtonSFX.setBuffer(pressButtonBuff);
+	pressButtonSFX.setVolume(100);
+
 }
 
 void Game::initGUI()
@@ -177,7 +183,7 @@ void Game::initGUI()
 		this->window->getSize().y / 2.f - this->gameOverText.getGlobalBounds().height / 2.f);
 
 	//Game Over Explain
-	this->gameOverExplainPosY = 940.f;
+	this->gameOverExplainPosY = 1000.f;
 	this->gameOverExFontSize = 50;
 	this->gameOverExThickness = 5;
 	this->gameOverExStartPos = 180.f;

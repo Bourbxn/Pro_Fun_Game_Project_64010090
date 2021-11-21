@@ -49,12 +49,18 @@ void Textbox::inputLogic(int charTyped)
 
 void Textbox::initBackground()
 {
+	//Background
 	if (!this->backgroundTex.loadFromFile("Textures/menu_bg.png"))
 	{
 		std::cout << "ERROR::GAME::COULD NOT LOAD BACKGROUND TEXTURE" << "\n";
 	}
 	this->background.setScale(1.f, 1.f);
 	this->background.setTexture(this->backgroundTex);
+
+	//Box
+	this->rectangleBox.setSize(Vector2f(520.f, 100.f));
+	this->rectangleBox.setPosition(Vector2f(710.f, 480.f));
+	this->rectangleBox.setFillColor(Color(0,0,0,150));
 }
 
 void Textbox::initText()
@@ -167,6 +173,7 @@ std::string Textbox::getText()
 void Textbox::render(RenderTarget& target)
 {
 	target.draw(this->background);
+	target.draw(this->rectangleBox);
 	target.draw(this->textbox);
 	target.draw(this->textEnterName);
 }
