@@ -11,7 +11,7 @@ void Menu::initVariables()
 void Menu::initTexture()
 {
 	//Background
-	if (!this->textureMenuBG.loadFromFile("Textures/menu_bg.png"))
+	if (!this->textureMenuBG.loadFromFile("Textures/menu_bg_2.png"))
 	{
 		std::cout << "ERROR::BACKGROUND::INITTEXTURE::Could not load textures file." << "\n";
 	}
